@@ -1,0 +1,1 @@
+namespace DotaHpAlert.DesignPreview; public partial class MainWindow : System.Windows.Window { public MainWindow() => InitializeComponent(); }
