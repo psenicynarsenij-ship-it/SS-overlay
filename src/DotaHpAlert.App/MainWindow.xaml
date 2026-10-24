@@ -1,0 +1,42 @@
+<Window x:Class="DotaHpAlert.App.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Dota HP Alert" Width="800" Height="810" MinWidth="700" MinHeight="640" Closing="WindowClosing">
+<ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="20">
+<TextBlock Text="Dota HP Alert" FontSize="26" FontWeight="Bold" />
+<TextBlock Text="Выберите область с числом HP. Для захвата игра должна быть на переднем плане в оконном режиме без рамки." TextWrapping="Wrap" Margin="0,6,0,12" />
+<WrapPanel Margin="0,0,0,10">
+<CheckBox x:Name="Invoker" Content="Профиль Invoker" Margin="0,0,16,0" Checked="InvokerChanged" Unchecked="InvokerChanged" />
+<CheckBox x:Name="Sound" Content="Звук" Margin="0,0,16,0" />
+<CheckBox x:Name="Visual" Content="Оверлей" />
+</WrapPanel>
+<Grid x:Name="SettingsPanel"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+<StackPanel Margin="0,0,16,0">
+<TextBlock Text="Порог HP"/><TextBox x:Name="Threshold"/>
+<TextBlock Text="Повтор, секунды"/><TextBox x:Name="Repeat"/>
+<TextBlock Text="Гистерезис"/><TextBox x:Name="Hysteresis"/>
+<TextBlock Text="Минимальная уверенность OCR (0–1)"/><TextBox x:Name="Confidence"/>
+<TextBlock Text="Громкость предупреждения (0–100%)"/>
+<Slider x:Name="SoundVolume" Minimum="0" Maximum="1" TickFrequency="0.05" IsSnapToTickEnabled="True" ToolTip="{Binding Value, RelativeSource={RelativeSource Self}, StringFormat=P0}"/>
+<TextBlock Text="Интервал захвата, мс (100–10000)"/><TextBox x:Name="Interval"/>
+</StackPanel>
+<StackPanel Grid.Column="1">
+<TextBlock Text="Точный заголовок окна"/><TextBox x:Name="GameTitle"/>
+<TextBlock Text="Область HP: X, Y, ширина, высота (пиксели клиента)" TextWrapping="Wrap"/>
+<UniformGrid Columns="4"><TextBox x:Name="RegionX"/><TextBox x:Name="RegionY"/><TextBox x:Name="RegionWidth"/><TextBox x:Name="RegionHeight"/></UniformGrid>
+<TextBlock Text="Оверлей: X, Y (экранные DIP)"/>
+<UniformGrid Columns="2"><TextBox x:Name="OverlayX"/><TextBox x:Name="OverlayY"/></UniformGrid>
+<TextBlock Text="Настройки применяются при запуске. Профиль можно отключить во время работы." TextWrapping="Wrap" Margin="0,10,0,0"/>
+</StackPanel></Grid>
+<WrapPanel Margin="0,14,0,10">
+<Button x:Name="StartButton" Content="Захват игры" Click="StartCapture" Padding="10,6" Margin="0,0,8,4"/>
+<Button x:Name="DemoButton" Content="Демо без Dota" Click="StartDemo" Padding="10,6" Margin="0,0,8,4"/>
+<Button x:Name="TestNotificationButton" Content="Тест уведомления" Click="TestNotification" Padding="10,6" Margin="0,0,8,4"/>
+<Button x:Name="StopButton" Content="Стоп" Click="Stop" IsEnabled="False" Padding="10,6" Margin="0,0,8,4"/>
+<Button x:Name="ImageButton" Content="OCR изображения…" Click="OpenImage" Padding="10,6" Margin="0,0,8,4"/>
+<Button x:Name="SaveButton" Content="Сохранить настройки" Click="Save" Padding="10,6" Margin="0,0,8,4"/>
+</WrapPanel>
+<TextBlock x:Name="Status" Text="Остановлено" FontSize="17" TextWrapping="Wrap"/>
+<TextBlock x:Name="Timing" Margin="0,5,0,5"/>
+<Border BorderBrush="Gray" BorderThickness="1" Height="100"><Image x:Name="Preview" Stretch="Uniform"/></Border>
+<TextBlock Text="Диагностика" Margin="0,10,0,4"/>
+<TextBox x:Name="Diagnostics" Height="150" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+</StackPanel></ScrollViewer>
+</Window>

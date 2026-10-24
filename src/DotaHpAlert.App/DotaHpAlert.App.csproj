@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+<PropertyGroup><OutputType>WinExe</OutputType><TargetFramework>net8.0-windows</TargetFramework><UseWPF>true</UseWPF><EnableWindowsTargeting>true</EnableWindowsTargeting><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><PlatformTarget>x64</PlatformTarget><ApplicationManifest>app.manifest</ApplicationManifest></PropertyGroup>
+<ItemGroup><PackageReference Include="NAudio.WinMM" Version="2.2.1" /><ProjectReference Include="../DotaHpAlert.Core/DotaHpAlert.Core.csproj" /><ProjectReference Include="../DotaHpAlert.Recognition/DotaHpAlert.Recognition.csproj" />
+<Content Include="../../tests/fixtures/synthetic/*.png" Link="demo/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+<Content Include="../../assets/sounds/hp-alert.wav" Link="sounds/hp-alert.wav" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+</ItemGroup></Project>

@@ -1,0 +1,66 @@
+[
+  {
+    "File": "synthetic/healthy.png",
+    "Hp": 800
+  },
+  {
+    "File": "synthetic/threshold.png",
+    "Hp": 350
+  },
+  {
+    "File": "synthetic/low.png",
+    "Hp": 349
+  },
+  {
+    "File": "synthetic/critical.png",
+    "Hp": 25
+  },
+  {
+    "File": "synthetic/zero.png",
+    "Hp": 0
+  },
+  {
+    "File": "synthetic/four-digit.png",
+    "Hp": 2345
+  },
+  {
+    "File": "synthetic/single.png",
+    "Hp": 320
+  },
+  {
+    "File": "synthetic/menu.png",
+    "Hp": null
+  },
+  {
+    "File": "synthetic/bad-fraction.png",
+    "Hp": null
+  },
+  {
+    "File": "synthetic/blank.png",
+    "Hp": null
+  },
+  {
+    "File": "synthetic/noise.png",
+    "Hp": null
+  },
+  {
+    "File": "Dota 2 Screenshot 2026.10.24 - 17.55.17.90.png",
+    "Hp": 2298,
+    "Region": {
+      "X": 855,
+      "Y": 1018,
+      "Width": 140,
+      "Height": 25
+    }
+  },
+  {
+    "File": "Dota 2 Screenshot 2026.10.24 - 18.02.12.14.png",
+    "Hp": 59,
+    "Region": {
+      "X": 855,
+      "Y": 1018,
+      "Width": 140,
+      "Height": 25
+    }
+  }
+]

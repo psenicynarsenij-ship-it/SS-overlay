@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+<PropertyGroup><TargetFramework>net8.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup>
+<ItemGroup><ProjectReference Include="../DotaHpAlert.Core/DotaHpAlert.Core.csproj" />
+<PackageReference Include="StbImageSharp" Version="2.30.16" />
+<PackageReference Include="StbImageWriteSharp" Version="1.16.7" />
+<PackageReference Include="Tesseract" Version="5.2.0" GeneratePathProperty="true" ExcludeAssets="all" />
+<Content Include="$(PkgTesseract)/x64/*.dll" Link="x64/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+<Content Include="../../assets/tessdata/*" Link="tessdata/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+</ItemGroup></Project>

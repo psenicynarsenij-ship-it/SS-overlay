@@ -1,0 +1,62 @@
+{
+  "Iterations": 5000,
+  "Invalid": 0,
+  "MeanMs": 7.6162665800000005,
+  "PrivateBytesBefore": 103608320,
+  "PrivateBytesAfter": 121028608,
+  "ManagedBytesBefore": 108744,
+  "ManagedBytesAfter": 127792,
+  "WorkingSetBytes": 84590592,
+  "Samples": [
+    {
+      "Iteration": 500,
+      "ManagedBytes": 127240,
+      "PrivateBytes": 123789312
+    },
+    {
+      "Iteration": 1000,
+      "ManagedBytes": 127336,
+      "PrivateBytes": 123912192
+    },
+    {
+      "Iteration": 1500,
+      "ManagedBytes": 127376,
+      "PrivateBytes": 123912192
+    },
+    {
+      "Iteration": 2000,
+      "ManagedBytes": 127416,
+      "PrivateBytes": 123912192
+    },
+    {
+      "Iteration": 2500,
+      "ManagedBytes": 127456,
+      "PrivateBytes": 123912192
+    },
+    {
+      "Iteration": 3000,
+      "ManagedBytes": 127528,
+      "PrivateBytes": 123912192
+    },
+    {
+      "Iteration": 3500,
+      "ManagedBytes": 135792,
+      "PrivateBytes": 123912192
+    },
+    {
+      "Iteration": 4000,
+      "ManagedBytes": 135832,
+      "PrivateBytes": 123912192
+    },
+    {
+      "Iteration": 4500,
+      "ManagedBytes": 135872,
+      "PrivateBytes": 123912192
+    },
+    {
+      "Iteration": 5000,
+      "ManagedBytes": 127752,
+      "PrivateBytes": 123912192
+    }
+  ]
+}
