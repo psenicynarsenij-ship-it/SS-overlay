@@ -19,10 +19,9 @@ public partial class MainWindow : Window
     private CancellationTokenSource? cancellation;
     private Task? worker;
     private bool demoMode, viewingImage;
-    private string? selectedSound;
+    private string selectedSound = SoundLibrary.StandardId;
     private string positionPreset = "Custom";
     private bool changingPosition;
-    private Task? importWork;
     private bool initialized, closing, allowClose, acceptAlerts;
 
     public MainWindow()
@@ -39,14 +38,17 @@ public partial class MainWindow : Window
         catch (Exception error) { settings = new(); Log($"Не удалось загрузить настройки: {error.Message}. Использованы значения по умолчанию; исходный файл сохранён."); }
         Fill(settings); initialized = true;
         soundPlayer.Diagnostic = SoundFallback;
+        SoundVolume.ValueChanged += (_,_) => { if(initialized) SaveSoundSelection(); };
         OverlayX.TextChanged += (_,_) => { if (!changingPosition) positionPreset="Custom"; };
         OverlayY.TextChanged += (_,_) => { if (!changingPosition) positionPreset="Custom"; };
         Log("Готово. Профиль Invoker включается вручную; автоматического распознавания героя нет.");
     }
     private void Fill(ApplicationSettings s)
     {
-        selectedSound = s.SoundFilePath; soundPlayer.CustomPath = selectedSound;
-        SoundName.Text = selectedSound is null ? "Стандартный сигнал" : Path.GetFileName(selectedSound);
+        selectedSound = SoundLibrary.Find(s.SoundPresetId).Id; soundPlayer.PresetId = selectedSound;
+        Presets.ItemsSource=SoundLibrary.Presets;
+        Presets.SelectedItem=SoundLibrary.Find(selectedSound);
+        SoundName.Text = SoundLibrary.Find(selectedSound).Name;
         positionPreset = s.OverlayPosition; AnimationEnabled.IsChecked=s.OverlayAnimation;
         overlay.AnimationEnabled=s.OverlayAnimation;
         SoundVolume.Value = s.SoundVolume;
@@ -69,7 +71,7 @@ public partial class MainWindow : Window
                 SoundEnabled = Sound.IsChecked == true, VisualEnabled = Visual.IsChecked == true },
             Region = new(Integer(RegionX.Text), Integer(RegionY.Text), Integer(RegionWidth.Text), Integer(RegionHeight.Text)),
             WindowTitle = GameTitle.Text.Trim(), CaptureIntervalMs = Integer(Interval.Text), MinimumConfidence = Number(Confidence.Text),
-            SoundFilePath = selectedSound, OverlayPosition=positionPreset,
+            SoundPresetId = selectedSound, OverlayPosition=positionPreset,
             OverlayAnimation=AnimationEnabled.IsChecked==true,
             SoundVolume = SoundVolume.Value,
             OverlayLeft = Number(OverlayX.Text), OverlayTop = Number(OverlayY.Text)
@@ -84,12 +86,13 @@ public partial class MainWindow : Window
     private async void StartDemo(object sender, RoutedEventArgs e) => await StartMonitoring(true);
     private async Task StartMonitoring(bool demo)
     {
-        if (worker is not null || closing || importWork is not null) return;
+        if (worker is not null || closing) return;
         try
         {
             var settings = ReadSettings();
+            notifications.Stop();
             overlay.AnimationEnabled=settings.OverlayAnimation;
-            soundPlayer.CustomPath=selectedSound;
+            soundPlayer.PresetId=selectedSound;
             acceptAlerts = settings.Alerts.InvokerEnabled;
             if (!acceptAlerts) Log("Профиль Invoker выключен: OCR работает, уведомления отключены.");
             Status.Text = demo ? "Демо: реальные изображения → OCR → AlertEngine" : "Ожидание окна игры на переднем плане…";
@@ -189,7 +192,7 @@ public partial class MainWindow : Window
             }
             if (closing) return;
             overlay.AnimationEnabled=AnimationEnabled.IsChecked==true;
-            soundPlayer.CustomPath=selectedSound;
+            soundPlayer.PresetId=selectedSound;
             // Deliberately independent of OCR settings, engine state, profile and channel switches.
             var left = double.Parse(OverlayX.Text.Replace(',', '.'), CultureInfo.InvariantCulture);
             var top = double.Parse(OverlayY.Text.Replace(',', '.'), CultureInfo.InvariantCulture);
@@ -210,7 +213,7 @@ public partial class MainWindow : Window
 
     private async void OpenImage(object sender, RoutedEventArgs e)
     {
-        if (worker is not null || closing || importWork is not null) return;
+        if (worker is not null || closing) return;
         var dialog = new OpenFileDialog { Filter = "Изображения|*.png;*.jpg;*.jpeg;*.bmp" };
         if (dialog.ShowDialog(this) != true) return;
         try
@@ -251,41 +254,41 @@ public partial class MainWindow : Window
     private void PositionTopLeft(object sender,RoutedEventArgs e)=>SetPosition("TopLeft");
     private void PositionTopCenter(object sender,RoutedEventArgs e)=>SetPosition("TopCenter");
     private void PositionCustom(object sender,RoutedEventArgs e)=>SetPosition("Custom");
-    private async void ChooseSound(object sender,RoutedEventArgs e)
+    private void SelectPreset(object sender,RoutedEventArgs e)
     {
-        if(worker is not null || importWork is not null || closing) return;
-        var dialog=new OpenFileDialog { Filter="Звуки WAV / MP3|*.wav;*.mp3" };
-        if(dialog.ShowDialog(this)!=true) return;
+        if(sender is System.Windows.Controls.Button { Tag: SoundPreset preset }) Presets.SelectedItem=preset;
+    }
+    private void PresetChanged(object sender,System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        if(Presets.SelectedItem is not SoundPreset preset) return;
+        selectedSound=preset.Id; soundPlayer.PresetId=preset.Id; SoundName.Text=preset.Name;
+        if(!initialized) return;
+        SaveSoundSelection();
+    }
+    private void SaveSoundSelection()
+    {
         try
         {
-            SoundPanel.IsEnabled=StartButton.IsEnabled=DemoButton.IsEnabled=ImageButton.IsEnabled=SaveButton.IsEnabled=false;
-            var task=Task.Run(()=>UserSoundStore.Import(dialog.FileName,Path.Combine(Path.GetDirectoryName(settingsPath)!,"sounds"),AlertSoundPlayer.ValidateAudio));
-            importWork=task;
-            var path=await task;
-            if(closing) return;
-            selectedSound=path; soundPlayer.CustomPath=path;
-            SoundName.Text=Path.GetFileName(dialog.FileName);
-            Log("Звук проверен и скопирован в папку приложения. Нажмите «Сохранить настройки».");
+            var saved=SettingsStore.Load(settingsPath);
+            SettingsStore.Save(settingsPath,saved with { SoundPresetId=selectedSound,SoundVolume=SoundVolume.Value });
         }
-        catch(Exception error) { if(!closing) { SoundFallback($"Импорт не удался: {error.Message}. Возвращён стандартный сигнал."); } }
-        finally { importWork=null; if(!closing) SetRunning(false); }
+        catch(Exception error) { Log($"Не удалось сохранить звук: {error.Message}"); }
     }
-    private void ResetSound(object sender,RoutedEventArgs e)
+    private void PreviewPreset(object sender,RoutedEventArgs e)
     {
-        notifications.Stop(); selectedSound=null; soundPlayer.CustomPath=null; SoundName.Text="Стандартный сигнал";
-    }
-    private async void PreviewSound(object sender,RoutedEventArgs e)
-    {
-        if(worker is not null) await StopAsync();
-        if(closing) return;
-        soundPlayer.CustomPath=selectedSound;
+        if(closing || worker is not null) return;
+        if(sender is not System.Windows.Controls.Button { Tag: SoundPreset preset }) return;
+        notifications.Stop();
+        soundPlayer.PresetId=preset.Id;
         notifications.PreviewSound(SoundVolume.Value);
+        soundPlayer.PresetId=selectedSound;
     }
     private void SoundFallback(string message)
     {
-        selectedSound=null; SoundName.Text="Стандартный сигнал";
+        selectedSound=SoundLibrary.StandardId;
+        Presets.SelectedItem=SoundLibrary.Find(selectedSound); SoundName.Text="Стандартный сигнал";
         Log(message);
-        try { if(File.Exists(settingsPath)) SettingsStore.Save(settingsPath,SettingsStore.Load(settingsPath) with { SoundFilePath=null }); }
+        try { if(File.Exists(settingsPath)) SettingsStore.Save(settingsPath,SettingsStore.Load(settingsPath) with { SoundPresetId=SoundLibrary.StandardId }); }
         catch(Exception error) { Log($"Не удалось сохранить fallback: {error.Message}"); }
     }
     [System.Runtime.InteropServices.DllImport("dwmapi.dll")]
@@ -301,7 +304,7 @@ public partial class MainWindow : Window
         if (allowClose) return;
         if (closing) { e.Cancel=true; return; }
         closing = true; IsEnabled = false;
-        if(worker is null && importWork is null)
+        if(worker is null)
         {
             notifications.Stop();
             try { soundPlayer.Dispose(); } catch(Exception error) { Log(error.Message); }
@@ -310,7 +313,6 @@ public partial class MainWindow : Window
         e.Cancel=true;
         await System.Windows.Threading.Dispatcher.Yield(System.Windows.Threading.DispatcherPriority.Background);
         await StopAsync();
-        if(importWork is not null) { try { await importWork; } catch(Exception error) { Log(error.Message); } }
         try { soundPlayer.Dispose(); }
         catch (Exception error) { Log($"[SoundError] {error}"); }
         overlay.Close(); allowClose = true; Close();

@@ -28,6 +28,19 @@ jobs:
       - name: Publish Windows x64
         if: runner.os == 'Windows'
         run: dotnet publish src/DotaHpAlert.App -c Release -r win-x64 --self-contained true -p:RestoreLockedMode=false -o artifacts/win-x64
+      - name: Verify all six packaged sound files
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $names = @('hp-alert.wav','short-loud-chime.mp3','error-notification.mp3','steam-.mp3','delivered-message-sound.mp3','steam-achievement.mp3')
+          foreach ($name in $names) {
+            $file = Join-Path 'artifacts/win-x64/sounds' $name
+            if (!(Test-Path $file) -or (Get-Item $file).Length -eq 0) { throw "Missing preset: $name" }
+            if ($name -ne 'hp-alert.wav') {
+              $source = Join-Path 'assets/sounds/library' $name
+              if ((Get-FileHash $source).Hash -ne (Get-FileHash $file).Hash) { throw "Preset changed: $name" }
+            }
+          }
       - name: Upload Windows application
         if: runner.os == 'Windows'
         uses: actions/upload-artifact@v4

@@ -8,9 +8,12 @@ namespace DotaHpAlert.App;
 /// <summary>UI-thread-owned playback. Each request has one output; Stop disposes before another starts.</summary>
 internal sealed class AlertSoundPlayer : ISoundChannel, IDisposable
 {
-    private WaveOutEvent? output;
+    private readonly Func<IWavePlayer> outputFactory;
+    public AlertSoundPlayer(Func<IWavePlayer>? outputFactory=null) =>
+        this.outputFactory=outputFactory ?? (()=>new WaveOutEvent { DesiredLatency=80 });
+    private IWavePlayer? output;
     private WaveStream? reader;
-    public string? CustomPath { get; set; }
+    public string PresetId { get; set; } = SoundLibrary.StandardId;
     public Action<string>? Diagnostic { get; set; }
     public static WaveStream OpenAudio(string path) => Path.GetExtension(path).ToLowerInvariant() switch
     {
@@ -35,19 +38,22 @@ internal sealed class AlertSoundPlayer : ISoundChannel, IDisposable
     public void Play(double volume, Action<Exception?> completed)
     {
         Stop();
+        var requested=SoundLibrary.Find(PresetId).Id;
+        var actual=requested;
         try
         {
-            reader = UserSoundStore.OpenWithFallback(CustomPath, path =>
+            reader = SoundLibrary.OpenWithFallback(PresetId, AppContext.BaseDirectory, path =>
             {
                 ValidateAudio(path);
                 return OpenAudio(path);
-            }, Path.Combine(AppContext.BaseDirectory, "sounds", "hp-alert.wav"), message =>
+            }, message =>
             {
-                CustomPath = null;
+                actual=SoundLibrary.StandardId;
+                PresetId = SoundLibrary.StandardId;
                 Diagnostic?.Invoke(message);
             });
             var samples = new VolumeSampleProvider(reader.ToSampleProvider()) { Volume = (float)volume };
-            var device = new WaveOutEvent { DesiredLatency = 80 };
+            var device = outputFactory();
             output = device;
             stopped = (_, args) =>
             {
@@ -56,13 +62,26 @@ internal sealed class AlertSoundPlayer : ISoundChannel, IDisposable
                 var failure = args.Exception;
                 try { Stop(); }
                 catch (Exception error) { failure ??= error; }
-                completed(failure);
+                if(failure is not null && actual!=SoundLibrary.StandardId)
+                {
+                    PresetId=SoundLibrary.StandardId;
+                    Diagnostic?.Invoke($"Ошибка проигрывания: {failure.Message}. Стандартный сигнал.");
+                    try { Play(volume,completed); } catch(Exception error) { completed(error); }
+                }
+                else completed(failure);
             };
             device.PlaybackStopped += stopped;
             device.Init(samples.ToWaveProvider16());
             device.Play();
         }
-        catch { Stop(); throw; }
+        catch(Exception error)
+        {
+            Stop();
+            if(actual==SoundLibrary.StandardId) throw;
+            PresetId=SoundLibrary.StandardId;
+            Diagnostic?.Invoke($"Ошибка проигрывания: {error.Message}. Стандартный сигнал.");
+            Play(volume,completed);
+        }
     }
     public void Stop()
     {

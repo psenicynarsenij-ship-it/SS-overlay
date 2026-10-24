@@ -66,7 +66,7 @@ public sealed class NotificationRouter(IOverlayChannel overlay, ISoundChannel so
             catch (Exception error) { Emit(NotificationEventKind.OverlayError, error.ToString()); }
         }
         if (!audio) return;
-        Emit(NotificationEventKind.SoundRequested, $"Play hp-alert.wav: volume={options.Volume:P0}");
+        Emit(NotificationEventKind.SoundRequested, $"Play selected sound preset: volume={options.Volume:P0}");
         if (options.Volume == 0) { Emit(NotificationEventKind.SoundMuted, "Volume is zero."); return; }
         var ticket = new object();
         bool busy;
