@@ -210,3 +210,9 @@ dotnet run --project src/DotaHpAlert.DesignPreview -c Release
 Во всех уведомлениях центральный акцент — `150 HP`, над ним Sun Strike и символ опасности.
 Реальные уведомления не создаются. Рабочий UI и его логика не изменены.
 WPF-превью нужно открывать на Windows; скриншоты реального рендера на Linux не получены.
+
+Для просмотра без SDK: в Actions → **Design Preview Windows x64** скачайте артефакт
+**SS-Overlay-Design-Preview**, распакуйте и откройте **SS-Overlay-Design-Preview.exe**.
+Самостоятельная Windows x64 сборка не требует установки .NET.
+Настоящие WPF-рендеры всех трёх вкладок публикуются отдельным артефактом Screenshots.
+Подробнее: [docs/design/README.md](docs/design/README.md).

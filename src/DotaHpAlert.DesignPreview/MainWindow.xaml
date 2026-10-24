@@ -12,8 +12,8 @@
 <TextBlock Text="DESIGN LAB / SS OVERLAY" FontSize="24" FontWeight="Bold"/>
 <TextBlock Text="Статические референсы • Все показатели вымышлены • Элементы управления декоративные" Foreground="#989FB3" Margin="0,8,0,0"/>
 </StackPanel>
-<TabControl Background="#0C0E13" BorderThickness="0">
-<TabItem Header="Concept 1">
+<TabControl x:Name="ConceptTabs" Background="#0C0E13" BorderThickness="0">
+<TabItem Header="Tactical Dark">
 <ScrollViewer VerticalScrollBarVisibility="Auto">
 <StackPanel Margin="16">
 <TextBlock Text="01 / TACTICAL DARK" Foreground="#FFAA45" FontSize="13" Margin="0,10,0,8"/>
@@ -102,7 +102,7 @@ HP — центральный акцент" TextAlignment="Center" Foreground="#
 </StackPanel>
 </ScrollViewer>
 </TabItem>
-<TabItem Header="Concept 2">
+<TabItem Header="Fluent Dark">
 <ScrollViewer VerticalScrollBarVisibility="Auto">
 <StackPanel Margin="16">
 <TextBlock Text="02 / FLUENT DARK" Foreground="#B7B9FF" FontSize="13" Margin="0,10,0,8"/>
@@ -191,7 +191,7 @@ HP — центральный акцент" TextAlignment="Center" Foreground="#
 </StackPanel>
 </ScrollViewer>
 </TabItem>
-<TabItem Header="Concept 3">
+<TabItem Header="Esports Neon">
 <ScrollViewer VerticalScrollBarVisibility="Auto">
 <StackPanel Margin="16">
 <TextBlock Text="03 / ESPORTS NEON" Foreground="#43F5DA" FontSize="13" Margin="0,10,0,8"/>
