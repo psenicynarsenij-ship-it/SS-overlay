@@ -51,6 +51,11 @@ public sealed class NotificationRouter(IOverlayChannel overlay, ISoundChannel so
         Emit(NotificationEventKind.TestRequested, "Manual test: bypass OCR, game, profile and channel switches.");
         Send(123, options, visual: true, audio: true);
     }
+    public void PreviewSound(double volume)
+    {
+        Emit(NotificationEventKind.TestRequested,"Предпрослушивание звука без AlertEngine и оверлея.");
+        Send(0,new(0,0,volume),visual:false,audio:true);
+    }
     private void Send(int hp, NotificationOptions options, bool visual, bool audio)
     {
         options.Validate();
@@ -61,7 +66,7 @@ public sealed class NotificationRouter(IOverlayChannel overlay, ISoundChannel so
             catch (Exception error) { Emit(NotificationEventKind.OverlayError, error.ToString()); }
         }
         if (!audio) return;
-        Emit(NotificationEventKind.SoundRequested, $"Play hp-alert.wav: volume={options.Volume:P0}");
+        Emit(NotificationEventKind.SoundRequested, $"Play selected sound preset: volume={options.Volume:P0}");
         if (options.Volume == 0) { Emit(NotificationEventKind.SoundMuted, "Volume is zero."); return; }
         var ticket = new object();
         bool busy;

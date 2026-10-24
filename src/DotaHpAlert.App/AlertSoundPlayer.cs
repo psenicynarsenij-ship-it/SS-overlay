@@ -8,18 +8,52 @@ namespace DotaHpAlert.App;
 /// <summary>UI-thread-owned playback. Each request has one output; Stop disposes before another starts.</summary>
 internal sealed class AlertSoundPlayer : ISoundChannel, IDisposable
 {
-    private WaveOutEvent? output;
-    private WaveFileReader? reader;
+    private readonly Func<IWavePlayer> outputFactory;
+    public AlertSoundPlayer(Func<IWavePlayer>? outputFactory=null) =>
+        this.outputFactory=outputFactory ?? (()=>new WaveOutEvent { DesiredLatency=80 });
+    private IWavePlayer? output;
+    private WaveStream? reader;
+    public string PresetId { get; set; } = SoundLibrary.StandardId;
+    public Action<string>? Diagnostic { get; set; }
+    public static WaveStream OpenAudio(string path) => Path.GetExtension(path).ToLowerInvariant() switch
+    {
+        ".wav" => new WaveFileReader(path),
+        ".mp3" => new Mp3FileReaderBase(path, format => new AcmMp3FrameDecompressor(format)),
+        _ => throw new InvalidDataException("Поддерживаются WAV и MP3.")
+    };
+    public static void ValidateAudio(string path)
+    {
+        using var audio = OpenAudio(path);
+        if (audio.TotalTime <= TimeSpan.Zero || audio.TotalTime > TimeSpan.FromSeconds(60))
+            throw new InvalidDataException("Длительность звука должна быть от 0 до 60 секунд.");
+        if(audio.WaveFormat.Channels is <1 or >2 || audio.WaveFormat.SampleRate is <8000 or >192000)
+            throw new InvalidDataException("Поддерживается mono/stereo, 8–192 кГц.");
+        var samples=audio.ToSampleProvider();
+        var buffer = new float[4096]; long count = 0;
+        while (true) { var read = samples.Read(buffer,0,buffer.Length); if(read==0) break; count+=read; }
+        if(count==0) throw new InvalidDataException("Нет аудиоданных.");
+    }
     private EventHandler<StoppedEventArgs>? stopped;
 
     public void Play(double volume, Action<Exception?> completed)
     {
         Stop();
+        var requested=SoundLibrary.Find(PresetId).Id;
+        var actual=requested;
         try
         {
-            reader = new WaveFileReader(Path.Combine(AppContext.BaseDirectory, "sounds", "hp-alert.wav"));
+            reader = SoundLibrary.OpenWithFallback(PresetId, AppContext.BaseDirectory, path =>
+            {
+                ValidateAudio(path);
+                return OpenAudio(path);
+            }, message =>
+            {
+                actual=SoundLibrary.StandardId;
+                PresetId = SoundLibrary.StandardId;
+                Diagnostic?.Invoke(message);
+            });
             var samples = new VolumeSampleProvider(reader.ToSampleProvider()) { Volume = (float)volume };
-            var device = new WaveOutEvent { DesiredLatency = 80 };
+            var device = outputFactory();
             output = device;
             stopped = (_, args) =>
             {
@@ -28,13 +62,26 @@ internal sealed class AlertSoundPlayer : ISoundChannel, IDisposable
                 var failure = args.Exception;
                 try { Stop(); }
                 catch (Exception error) { failure ??= error; }
-                completed(failure);
+                if(failure is not null && actual!=SoundLibrary.StandardId)
+                {
+                    PresetId=SoundLibrary.StandardId;
+                    Diagnostic?.Invoke($"Ошибка проигрывания: {failure.Message}. Стандартный сигнал.");
+                    try { Play(volume,completed); } catch(Exception error) { completed(error); }
+                }
+                else completed(failure);
             };
             device.PlaybackStopped += stopped;
             device.Init(samples.ToWaveProvider16());
             device.Play();
         }
-        catch { Stop(); throw; }
+        catch(Exception error)
+        {
+            Stop();
+            if(actual==SoundLibrary.StandardId) throw;
+            PresetId=SoundLibrary.StandardId;
+            Diagnostic?.Invoke($"Ошибка проигрывания: {error.Message}. Стандартный сигнал.");
+            Play(volume,completed);
+        }
     }
     public void Stop()
     {

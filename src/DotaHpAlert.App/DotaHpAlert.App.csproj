@@ -1,6 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
-<PropertyGroup><OutputType>WinExe</OutputType><TargetFramework>net8.0-windows</TargetFramework><UseWPF>true</UseWPF><EnableWindowsTargeting>true</EnableWindowsTargeting><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><PlatformTarget>x64</PlatformTarget><ApplicationManifest>app.manifest</ApplicationManifest></PropertyGroup>
+<PropertyGroup><OutputType>WinExe</OutputType><AssemblyName>SS-Overlay</AssemblyName><TargetFramework>net8.0-windows</TargetFramework><UseWPF>true</UseWPF><EnableWindowsTargeting>true</EnableWindowsTargeting><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><PlatformTarget>x64</PlatformTarget><ApplicationManifest>app.manifest</ApplicationManifest><SoundLibraryDirectory Condition="'$(SoundLibraryDirectory)' == ''">$(MSBuildThisFileDirectory)../../assets/sounds/library</SoundLibraryDirectory></PropertyGroup>
 <ItemGroup><PackageReference Include="NAudio.WinMM" Version="2.2.1" /><ProjectReference Include="../DotaHpAlert.Core/DotaHpAlert.Core.csproj" /><ProjectReference Include="../DotaHpAlert.Recognition/DotaHpAlert.Recognition.csproj" />
 <Content Include="../../tests/fixtures/synthetic/*.png" Link="demo/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
 <Content Include="../../assets/sounds/hp-alert.wav" Link="sounds/hp-alert.wav" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
-</ItemGroup></Project>
+<Content Include="$(SoundLibraryDirectory)/*.mp3" Link="sounds/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest"/>
+</ItemGroup>
+<Target Name="RequireCompleteSoundLibrary" BeforeTargets="Publish" Condition="'$(RequireSoundLibrary)' != 'false'">
+<ItemGroup><RequiredPreset Include="short-loud-chime.mp3;error-notification.mp3;steam-.mp3;delivered-message-sound.mp3;steam-achievement.mp3"/></ItemGroup>
+<Error Condition="!Exists('$(SoundLibraryDirectory)/%(RequiredPreset.Identity)')" Text="Missing licensed preset %(RequiredPreset.Identity). Provide SoundLibraryDirectory privately or obtain distribution approval. Complete package cannot be published."/>
+</Target>
+</Project>

@@ -9,6 +9,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       OMP_THREAD_LIMIT: '1'
+      SS_UI_SCREENSHOTS: '${{ github.workspace }}/artifacts/fluent-screenshots'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
@@ -27,12 +28,39 @@ jobs:
       - name: Publish Windows x64
         if: runner.os == 'Windows'
         run: dotnet publish src/DotaHpAlert.App -c Release -r win-x64 --self-contained true -p:RestoreLockedMode=false -o artifacts/win-x64
+      - name: Verify all six packaged sound files
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $names = @('hp-alert.wav','short-loud-chime.mp3','error-notification.mp3','steam-.mp3','delivered-message-sound.mp3','steam-achievement.mp3')
+          foreach ($name in $names) {
+            $file = Join-Path 'artifacts/win-x64/sounds' $name
+            if (!(Test-Path $file) -or (Get-Item $file).Length -eq 0) { throw "Missing preset: $name" }
+            if ($name -ne 'hp-alert.wav') {
+              $source = Join-Path 'assets/sounds/library' $name
+              if ((Get-FileHash $source).Hash -ne (Get-FileHash $file).Hash) { throw "Preset changed: $name" }
+            }
+          }
       - name: Upload Windows application
         if: runner.os == 'Windows'
         uses: actions/upload-artifact@v4
         with:
-          name: DotaHpAlert-win-x64
+          name: SS-Overlay-Fluent-Dark
           path: artifacts/win-x64/
+      - name: Upload actual WPF layout renders
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: SS-Overlay-Fluent-Dark-Screenshots
+          path: artifacts/fluent-screenshots/*.png
+          if-no-files-found: error
+      - name: Upload sound library screenshot
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: SS-Overlay-Sound-Library-Screenshot
+          path: artifacts/fluent-screenshots/fluent-100-tab-3.png
+          if-no-files-found: error
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4

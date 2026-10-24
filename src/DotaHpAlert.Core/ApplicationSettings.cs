@@ -16,6 +16,9 @@ public sealed record ApplicationSettings
     public string WindowTitle { get; init; } = "Dota 2";
     public int CaptureIntervalMs { get; init; } = 500;
     public double MinimumConfidence { get; init; } = 0.65;
+    public string SoundPresetId { get; init; } = SoundLibrary.StandardId;
+    public string OverlayPosition { get; init; } = "Custom";
+    public bool OverlayAnimation { get; init; } = true;
     public double SoundVolume { get; init; } = 0.7;
     public double OverlayLeft { get; init; } = 30;
     public double OverlayTop { get; init; } = 30;
@@ -23,6 +26,8 @@ public sealed record ApplicationSettings
     {
         if (Alerts is null || Region is null) throw new ArgumentException("Missing settings section.");
         Alerts.Validate(); Region.Validate();
+        if (OverlayPosition is not ("Custom" or "TopLeft" or "TopCenter"))
+            throw new ArgumentException("Неверная позиция или путь звука.");
         new NotificationOptions(OverlayLeft, OverlayTop, SoundVolume).Validate();
         if (string.IsNullOrWhiteSpace(WindowTitle) || WindowTitle.Length > 256 || CaptureIntervalMs < 100 || CaptureIntervalMs > 10000 ||
             !double.IsFinite(MinimumConfidence) || MinimumConfidence < 0 || MinimumConfidence > 1 ||
@@ -39,6 +44,7 @@ public static class SettingsStore
         if (new FileInfo(path).Length > 65536) throw new InvalidDataException("Settings file is too large.");
         var settings = JsonSerializer.Deserialize<ApplicationSettings>(File.ReadAllText(path), Json)
             ?? throw new InvalidDataException("Empty settings file.");
+        settings = settings with { SoundPresetId = SoundLibrary.Find(settings.SoundPresetId).Id };
         settings.Validate(); return settings;
     }
     public static void Save(string path, ApplicationSettings settings)

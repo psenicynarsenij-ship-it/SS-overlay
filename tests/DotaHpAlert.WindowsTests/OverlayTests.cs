@@ -62,6 +62,102 @@ public sealed class OverlayTests
         var peak = full.Max(Math.Abs); var quietPeak = reduced.Max(Math.Abs);
         Assert.InRange(peak,.3f,.4f); Assert.InRange(quietPeak/peak,.2499f,.2501f);
     }
+    [Fact] public void OriginalMp3DecodesWithWindowsAcm()
+    {
+        var path=Path.Combine(AppContext.BaseDirectory,"audio","original-alert.mp3");
+        AlertSoundPlayer.ValidateAudio(path);
+        using var stream=AlertSoundPlayer.OpenAudio(path);
+        Assert.InRange(stream.TotalTime.TotalSeconds,.4,.6);
+    }
+    public static IEnumerable<object[]> PresetIds()=>DotaHpAlert.Core.SoundLibrary.Presets.Select(p=>new object[]{p.Id});
+    [Theory][MemberData(nameof(PresetIds))]
+    public void EveryPackagedPresetFullyDecodesAndFeedsPlaybackProvider(string id)
+    {
+        var path=DotaHpAlert.Core.SoundLibrary.PathFor(id,AppContext.BaseDirectory);
+        Assert.True(File.Exists(path));
+        AlertSoundPlayer.ValidateAudio(path);
+        using var reader=AlertSoundPlayer.OpenAudio(path);
+        var samples=new VolumeSampleProvider(reader.ToSampleProvider()) { Volume=.4f };
+        var output=samples.ToWaveProvider16();
+        var buffer=new byte[8192]; long bytes=0; bool audible=false;
+        while(true)
+        {
+            var read=output.Read(buffer,0,buffer.Length);if(read==0)break;bytes+=read;
+            audible |= buffer.Take(read).Any(b=>b!=0);
+        }
+        Assert.True(bytes>0);Assert.True(audible);
+    }
+    [Theory][MemberData(nameof(PresetIds))]
+    public void ActualPlayerPlaysEachPresetAndReleasesOutput(string id)
+    {
+        var device=new MemoryOutput(); bool completed=false; Exception? failure=null;
+        using var player=new AlertSoundPlayer(()=>device) { PresetId=id };
+        player.Play(.6,error=>{completed=true;failure=error;});
+        Assert.True(completed);Assert.Null(failure);Assert.True(device.Bytes>0);Assert.True(device.Disposed);
+    }
+    [Fact] public void PlaybackErrorRetriesStandardOnlyOnce()
+    {
+        int attempts=0; var output=new MemoryOutput(); bool completed=false;
+        using var player=new AlertSoundPlayer(()=>++attempts==1?new MemoryOutput { Fail=true }:output) { PresetId="chime" };
+        player.Play(.5,error=>{Assert.Null(error);completed=true;});
+        Assert.True(completed);Assert.Equal(2,attempts);Assert.Equal("standard",player.PresetId);Assert.True(output.Bytes>0);
+    }
+    private sealed class MemoryOutput : IWavePlayer
+    {
+        private IWaveProvider? provider;
+        public bool Fail,Disposed; public long Bytes;
+        public event EventHandler<StoppedEventArgs>? PlaybackStopped;
+        public PlaybackState PlaybackState { get; private set; }
+        public float Volume { get; set; }=1;
+        public WaveFormat OutputWaveFormat=>provider?.WaveFormat ?? new WaveFormat();
+        public void Init(IWaveProvider source)=>provider=source;
+        public void Play()
+        {
+            PlaybackState=PlaybackState.Playing;
+            if(Fail) { PlaybackState=PlaybackState.Stopped;PlaybackStopped?.Invoke(this,new(new IOException("device failed")));return; }
+            var buffer=new byte[8192];int count;
+            while((count=provider!.Read(buffer,0,buffer.Length))>0) Bytes+=count;
+            PlaybackState=PlaybackState.Stopped;PlaybackStopped?.Invoke(this,new StoppedEventArgs(null));
+        }
+        public void Pause()=>PlaybackState=PlaybackState.Paused;
+        public void Stop()=>PlaybackState=PlaybackState.Stopped;
+        public void Dispose()=>Disposed=true;
+    }
+    [Fact] public void CorruptAudioIsRejected()
+    {
+        var path=Path.Combine(Path.GetTempPath(),Guid.NewGuid()+".mp3");
+        try { File.WriteAllText(path,"broken"); Assert.ThrowsAny<Exception>(()=>AlertSoundPlayer.ValidateAudio(path)); }
+        finally { File.Delete(path); }
+    }
+    [Theory] [InlineData(1.0)] [InlineData(1.25)] [InlineData(1.5)]
+    public void FluentWindowFitsLogicalViewportsForCommonDpi(double scale)=>OnSta(()=>
+    {
+        var window=new MainWindow();
+        try
+        {
+            window.Width=1920/scale; window.Height=1080/scale;
+            window.Show(); window.UpdateLayout();
+            Assert.True(window.ActualWidth>=720); Assert.True(window.ActualHeight>=600);
+            Assert.Equal("SS Overlay",window.Title);
+            var tabs=(System.Windows.Controls.TabControl)window.FindName("Sections");
+            Assert.Equal(4,tabs.Items.Count);
+            for(var i=0;i<tabs.Items.Count;i++)
+            {
+                tabs.SelectedIndex=i; window.UpdateLayout();
+                var bitmap=new System.Windows.Media.Imaging.RenderTargetBitmap((int)window.ActualWidth,(int)window.ActualHeight,96,96,System.Windows.Media.PixelFormats.Pbgra32);
+                bitmap.Render(window);
+                Assert.True(bitmap.PixelWidth>0);
+                var dir=Environment.GetEnvironmentVariable("SS_UI_SCREENSHOTS");
+                if(!string.IsNullOrEmpty(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                    var encoder=new System.Windows.Media.Imaging.PngBitmapEncoder(); encoder.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(bitmap));
+                    using var file=File.Create(Path.Combine(dir,$"fluent-{scale*100:0}-tab-{i+1}.png")); encoder.Save(file);
+                }
+            }
+        }
+        finally { window.Close(); }
+    });
     private static void OnSta(Action action)
     {
         Exception? error = null;

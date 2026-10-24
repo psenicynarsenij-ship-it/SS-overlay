@@ -133,6 +133,12 @@ public sealed class NotificationRouterTests
         public override long TimestampFrequency=>1;
         public override long GetTimestamp()=>Seconds;
     }
+    [Fact] public void SoundPreviewDoesNotPretendToBeAnEngineAlert()
+    {
+        Router().PreviewSound(.5);
+        Assert.Equal(0,overlay.Calls); Assert.Equal(1,sound.Calls); Assert.Equal(.5,sound.Volume);
+        Assert.DoesNotContain(events,e=>e.Kind==NotificationEventKind.EngineIssued);
+    }
     [Fact] public void ManualTestBypassesEngineAndChannelSwitches()
     {
         Router().Test(Options);
