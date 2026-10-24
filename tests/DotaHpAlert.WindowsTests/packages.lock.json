@@ -166,14 +166,6 @@
           "xunit.extensibility.core": "[2.9.2]"
         }
       },
-      "dotahpalert.app": {
-        "type": "Project",
-        "dependencies": {
-          "DotaHpAlert.Core": "[1.0.0, )",
-          "DotaHpAlert.Recognition": "[1.0.0, )",
-          "NAudio.WinMM": "[2.2.1, )"
-        }
-      },
       "dotahpalert.core": {
         "type": "Project"
       },
@@ -184,6 +176,14 @@
           "StbImageSharp": "[2.30.16, )",
           "StbImageWriteSharp": "[1.16.7, )",
           "Tesseract": "[5.2.0, )"
+        }
+      },
+      "SS-Overlay": {
+        "type": "Project",
+        "dependencies": {
+          "DotaHpAlert.Core": "[1.0.0, )",
+          "DotaHpAlert.Recognition": "[1.0.0, )",
+          "NAudio.WinMM": "[2.2.1, )"
         }
       }
     }

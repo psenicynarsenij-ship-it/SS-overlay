@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using DotaHpAlert.Core;
 
@@ -12,16 +13,23 @@ namespace DotaHpAlert.App;
 internal sealed class OverlayWindow : Window, IOverlayChannel
 {
     private const long ExtendedStyles = 0x20 | 0x08000000 | 0x80; // transparent, no-activate, toolwindow
+    public bool AnimationEnabled { get; set; } = true;
     private bool closed;
-    private readonly TextBlock label = new() { Foreground = Brushes.White, FontSize = 26, Margin = new Thickness(18) };
+    private readonly TextBlock label = new() { Foreground = Brushes.White, FontSize = 40, FontWeight=FontWeights.SemiBold, TextAlignment=TextAlignment.Center, HorizontalAlignment=HorizontalAlignment.Stretch };
     private readonly DispatcherTimer timer = new() { Interval = TimeSpan.FromSeconds(2) };
     public OverlayWindow()
     {
-        Width = 330; Height = 85; WindowStyle = WindowStyle.None; ResizeMode = ResizeMode.NoResize;
+        Width = 330; Height = 170; WindowStyle = WindowStyle.None; ResizeMode = ResizeMode.NoResize;
         AllowsTransparency = true; Background = Brushes.Transparent; Topmost = true;
         ShowInTaskbar = false; ShowActivated = false; Focusable = false; IsHitTestVisible = false;
-        Content = new Border { Background = new SolidColorBrush(Color.FromArgb(220, 145, 15, 15)),
-            CornerRadius = new CornerRadius(10), Child = label };
+        var stack=new StackPanel();
+        stack.Children.Add(new TextBlock { Text="☀", FontSize=23, TextAlignment=TextAlignment.Center, Foreground=new SolidColorBrush(Color.FromRgb(255,184,121)) });
+        stack.Children.Add(new TextBlock { Text="SUN STRIKE", FontSize=16, FontWeight=FontWeights.SemiBold, TextAlignment=TextAlignment.Center, Foreground=new SolidColorBrush(Color.FromRgb(183,185,255)), Margin=new Thickness(0,6,0,6) });
+        stack.Children.Add(label);
+        Content = new Border { Background = new SolidColorBrush(Color.FromArgb(240, 34, 38, 56)),
+            BorderBrush=new SolidColorBrush(Color.FromArgb(180,255,98,111)),BorderThickness=new Thickness(1),
+            CornerRadius = new CornerRadius(16), Padding=new Thickness(16), Margin=new Thickness(5), Child = stack,
+            Effect=new System.Windows.Media.Effects.DropShadowEffect { Color=Color.FromRgb(255,98,111),BlurRadius=10,Opacity=.18,ShadowDepth=0 } };
         SourceInitialized += (_, _) =>
         {
             var hwnd = new WindowInteropHelper(this).Handle;
@@ -35,7 +43,9 @@ internal sealed class OverlayWindow : Window, IOverlayChannel
     {
         Dispatcher.VerifyAccess();
         ObjectDisposedException.ThrowIf(closed, this);
-        label.Text = $"Низкое HP: {hp}";
+        label.Text = $"{hp} HP";
+        BeginAnimation(OpacityProperty,null);
+        Opacity=1;
         Left = left; Top = top;
         var foregroundBefore = GetForegroundWindow();
         Show();
@@ -54,6 +64,8 @@ internal sealed class OverlayWindow : Window, IOverlayChannel
             throw new Win32Exception(Marshal.GetLastWin32Error());
         UpdateLayout();
         if (!IsWindowVisible(hwnd)) throw new InvalidOperationException("Overlay HWND is not visible after Show.");
+        if(AnimationEnabled && SystemParameters.ClientAreaAnimation)
+            BeginAnimation(OpacityProperty,new DoubleAnimation(.35,1,TimeSpan.FromMilliseconds(170)));
         timer.Stop(); timer.Start();
         GetWindowRect(hwnd, out rect);
         return $"Overlay HWND visible; pixels=({rect.Left},{rect.Top})–({rect.Right},{rect.Bottom}), topmost=true, " +

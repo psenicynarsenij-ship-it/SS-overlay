@@ -18,20 +18,37 @@ public partial class MainWindow : Window
     private readonly Queue<string> messages = new();
     private CancellationTokenSource? cancellation;
     private Task? worker;
+    private bool demoMode;
+    private string? selectedSound;
+    private string positionPreset = "Custom";
+    private bool changingPosition;
+    private Task? importWork;
     private bool initialized, closing, allowClose, acceptAlerts;
 
     public MainWindow()
     {
         InitializeComponent();
+        SourceInitialized += (_,_) =>
+        {
+            var dark=1;
+            DwmSetWindowAttribute(new System.Windows.Interop.WindowInteropHelper(this).Handle,20,ref dark,4);
+        };
         notifications = new NotificationRouter(overlay, soundPlayer, NotificationDiagnostic);
         ApplicationSettings settings;
         try { settings = SettingsStore.Load(settingsPath); }
         catch (Exception error) { settings = new(); Log($"Не удалось загрузить настройки: {error.Message}. Использованы значения по умолчанию; исходный файл сохранён."); }
         Fill(settings); initialized = true;
+        soundPlayer.Diagnostic = SoundFallback;
+        OverlayX.TextChanged += (_,_) => { if (!changingPosition) positionPreset="Custom"; };
+        OverlayY.TextChanged += (_,_) => { if (!changingPosition) positionPreset="Custom"; };
         Log("Готово. Профиль Invoker включается вручную; автоматического распознавания героя нет.");
     }
     private void Fill(ApplicationSettings s)
     {
+        selectedSound = s.SoundFilePath; soundPlayer.CustomPath = selectedSound;
+        SoundName.Text = selectedSound is null ? "Стандартный сигнал" : Path.GetFileName(selectedSound);
+        positionPreset = s.OverlayPosition; AnimationEnabled.IsChecked=s.OverlayAnimation;
+        overlay.AnimationEnabled=s.OverlayAnimation;
         SoundVolume.Value = s.SoundVolume;
         Invoker.IsChecked = s.Alerts.InvokerEnabled; Sound.IsChecked = s.Alerts.SoundEnabled; Visual.IsChecked = s.Alerts.VisualEnabled;
         Threshold.Text = s.Alerts.HpThreshold.ToString(); Repeat.Text = s.Alerts.RepeatInterval.TotalSeconds.ToString(CultureInfo.InvariantCulture);
@@ -52,22 +69,31 @@ public partial class MainWindow : Window
                 SoundEnabled = Sound.IsChecked == true, VisualEnabled = Visual.IsChecked == true },
             Region = new(Integer(RegionX.Text), Integer(RegionY.Text), Integer(RegionWidth.Text), Integer(RegionHeight.Text)),
             WindowTitle = GameTitle.Text.Trim(), CaptureIntervalMs = Integer(Interval.Text), MinimumConfidence = Number(Confidence.Text),
+            SoundFilePath = selectedSound, OverlayPosition=positionPreset,
+            OverlayAnimation=AnimationEnabled.IsChecked==true,
             SoundVolume = SoundVolume.Value,
             OverlayLeft = Number(OverlayX.Text), OverlayTop = Number(OverlayY.Text)
         };
         settings.Validate(); return settings;
     }
-    private async void StartCapture(object sender, RoutedEventArgs e) => await StartMonitoring(false);
+    private async void StartCapture(object sender, RoutedEventArgs e)
+    {
+        if(worker is not null) await StopAsync();
+        else await StartMonitoring(false);
+    }
     private async void StartDemo(object sender, RoutedEventArgs e) => await StartMonitoring(true);
     private async Task StartMonitoring(bool demo)
     {
-        if (worker is not null || closing) return;
+        if (worker is not null || closing || importWork is not null) return;
         try
         {
             var settings = ReadSettings();
+            overlay.AnimationEnabled=settings.OverlayAnimation;
+            soundPlayer.CustomPath=selectedSound;
             acceptAlerts = settings.Alerts.InvokerEnabled;
             if (!acceptAlerts) Log("Профиль Invoker выключен: OCR работает, уведомления отключены.");
             Status.Text = demo ? "Демо: реальные изображения → OCR → AlertEngine" : "Ожидание окна игры на переднем плане…";
+            demoMode=demo;
             var demoDirectory = demo ? Path.Combine(AppContext.BaseDirectory, "demo") : null;
             await RunWorker(token => MonitorSession.RunAsync(settings, demoDirectory,
                 update => Dispatcher.InvokeAsync(() => ShowUpdate(update, settings)).Task, token));
@@ -97,9 +123,12 @@ public partial class MainWindow : Window
     }
     private void SetRunning(bool running)
     {
-        SettingsPanel.IsEnabled = !running;
+        SettingsPanel.IsEnabled = AlertFields.IsEnabled = PositionPanel.IsEnabled = SoundPanel.IsEnabled = AnimationEnabled.IsEnabled = !running;
+        StartButton.Content=running ? "Остановить" : "Начать мониторинг";
+        StartButton.IsEnabled=true;
+        if (!running) GameState.Text="Окно игры: мониторинг остановлен";
         Sound.IsEnabled = Visual.IsEnabled = !running;
-        StartButton.IsEnabled = DemoButton.IsEnabled = ImageButton.IsEnabled = SaveButton.IsEnabled = !running;
+        DemoButton.IsEnabled = ImageButton.IsEnabled = SaveButton.IsEnabled = !running;
         StopButton.IsEnabled = running;
     }
     private async Task StopAsync()
@@ -134,13 +163,16 @@ public partial class MainWindow : Window
             bitmap.StreamSource = stream; bitmap.EndInit(); bitmap.Freeze(); Preview.Source = bitmap;
         }
         var result = update.Recognition;
+        CurrentHp.Text = result?.Reading.IsValid==true ? $"{result.Reading.CurrentHp} HP" : "— HP";
+        RecognitionConfidence.Text = result is null ? "Уверенность OCR: —" : $"Уверенность OCR: {result.Reading.Confidence:P0}";
+        GameState.Text=result is null ? "Источник кадров недоступен" : demoMode ? "Источник: демонстрационные изображения" : "Окно Dota 2: кадр получен";
         if (result is null)
         {
             Status.Text = update.Message; Preview.Source = null; Timing.Text = "Кадр недоступен"; notifications.Stop();
         }
         else
         {
-            Status.Text = $"HP: {(result.Reading.IsValid ? result.Reading.CurrentHp.ToString() : "недостоверно")} | {update.Decision?.State} | {update.Decision?.Action}";
+            Status.Text = result.Reading.IsValid ? "Мониторинг активен" : "Мониторинг активен · данные недостоверны";
             Timing.Text = $"OCR: {result.Duration.TotalMilliseconds:F1} мс | цикл: {update.TotalDuration.TotalMilliseconds:F1} мс | уверенность: {result.Reading.Confidence:P0} | текст: {result.RawText}";
         }
         Log($"{update.Message}; {update.Decision?.Reason}");
@@ -156,6 +188,8 @@ public partial class MainWindow : Window
                 await StopAsync();
             }
             if (closing) return;
+            overlay.AnimationEnabled=AnimationEnabled.IsChecked==true;
+            soundPlayer.CustomPath=selectedSound;
             // Deliberately independent of OCR settings, engine state, profile and channel switches.
             var left = double.Parse(OverlayX.Text.Replace(',', '.'), CultureInfo.InvariantCulture);
             var top = double.Parse(OverlayY.Text.Replace(',', '.'), CultureInfo.InvariantCulture);
@@ -170,12 +204,13 @@ public partial class MainWindow : Window
             if (!Dispatcher.HasShutdownStarted) Dispatcher.InvokeAsync(() => NotificationDiagnostic(entry));
             return;
         }
+        if(entry.Kind==NotificationEventKind.EngineIssued) LastAlert.Text=$"Последнее предупреждение: {DateTime.Now:HH:mm:ss} · {entry.Message}";
         Log($"[{entry.Kind}] {entry.Message}");
     }
 
     private async void OpenImage(object sender, RoutedEventArgs e)
     {
-        if (worker is not null || closing) return;
+        if (worker is not null || closing || importWork is not null) return;
         var dialog = new OpenFileDialog { Filter = "Изображения|*.png;*.jpg;*.jpeg;*.bmp" };
         if (dialog.ShowDialog(this) != true) return;
         try
@@ -199,6 +234,63 @@ public partial class MainWindow : Window
         try { SettingsStore.Save(settingsPath, ReadSettings()); Log($"Настройки сохранены: {settingsPath}"); }
         catch (Exception error) { Log($"Настройки не сохранены: {error.Message}"); }
     }
+    private void SetPosition(string preset)
+    {
+        changingPosition=true;
+        try
+        {
+            positionPreset=preset;
+            if(preset!="Custom")
+            {
+                OverlayX.Text=(preset=="TopCenter" ? SystemParameters.WorkArea.Left+(SystemParameters.WorkArea.Width-330)/2 : SystemParameters.WorkArea.Left+30).ToString(CultureInfo.InvariantCulture);
+                OverlayY.Text=(SystemParameters.WorkArea.Top+30).ToString(CultureInfo.InvariantCulture);
+            }
+        }
+        finally { changingPosition=false; }
+    }
+    private void PositionTopLeft(object sender,RoutedEventArgs e)=>SetPosition("TopLeft");
+    private void PositionTopCenter(object sender,RoutedEventArgs e)=>SetPosition("TopCenter");
+    private void PositionCustom(object sender,RoutedEventArgs e)=>SetPosition("Custom");
+    private async void ChooseSound(object sender,RoutedEventArgs e)
+    {
+        if(worker is not null || importWork is not null || closing) return;
+        var dialog=new OpenFileDialog { Filter="Звуки WAV / MP3|*.wav;*.mp3" };
+        if(dialog.ShowDialog(this)!=true) return;
+        try
+        {
+            SoundPanel.IsEnabled=StartButton.IsEnabled=DemoButton.IsEnabled=ImageButton.IsEnabled=SaveButton.IsEnabled=false;
+            var task=Task.Run(()=>UserSoundStore.Import(dialog.FileName,Path.Combine(Path.GetDirectoryName(settingsPath)!,"sounds"),AlertSoundPlayer.ValidateAudio));
+            importWork=task;
+            var path=await task;
+            if(closing) return;
+            selectedSound=path; soundPlayer.CustomPath=path;
+            SoundName.Text=Path.GetFileName(dialog.FileName);
+            Log("Звук проверен и скопирован в папку приложения. Нажмите «Сохранить настройки».");
+        }
+        catch(Exception error) { if(!closing) { SoundFallback($"Импорт не удался: {error.Message}. Возвращён стандартный сигнал."); } }
+        finally { importWork=null; if(!closing) SetRunning(false); }
+    }
+    private void ResetSound(object sender,RoutedEventArgs e)
+    {
+        notifications.Stop(); selectedSound=null; soundPlayer.CustomPath=null; SoundName.Text="Стандартный сигнал";
+    }
+    private async void PreviewSound(object sender,RoutedEventArgs e)
+    {
+        if(worker is not null) await StopAsync();
+        if(closing) return;
+        soundPlayer.CustomPath=selectedSound;
+        notifications.Route(new(AlertAction.Show,AlertState.Active,AlertReason.SettingsUpdated,true,false),0,
+            new(0,0,SoundVolume.Value),true);
+    }
+    private void SoundFallback(string message)
+    {
+        selectedSound=null; SoundName.Text="Стандартный сигнал";
+        Log(message);
+        try { if(File.Exists(settingsPath)) SettingsStore.Save(settingsPath,SettingsStore.Load(settingsPath) with { SoundFilePath=null }); }
+        catch(Exception error) { Log($"Не удалось сохранить fallback: {error.Message}"); }
+    }
+    [System.Runtime.InteropServices.DllImport("dwmapi.dll")]
+    private static extern int DwmSetWindowAttribute(IntPtr hwnd,int attribute,ref int value,int size);
     private void Log(string message)
     {
         messages.Enqueue($"{DateTime.Now:HH:mm:ss} {message}");
@@ -208,10 +300,18 @@ public partial class MainWindow : Window
     private async void WindowClosing(object? sender, CancelEventArgs e)
     {
         if (allowClose) return;
-        e.Cancel = true;
-        if (closing) return;
+        if (closing) { e.Cancel=true; return; }
         closing = true; IsEnabled = false;
+        if(worker is null && importWork is null)
+        {
+            notifications.Stop();
+            try { soundPlayer.Dispose(); } catch(Exception error) { Log(error.Message); }
+            overlay.Close(); allowClose=true; return;
+        }
+        e.Cancel=true;
+        await System.Windows.Threading.Dispatcher.Yield(System.Windows.Threading.DispatcherPriority.Background);
         await StopAsync();
+        if(importWork is not null) { try { await importWork; } catch(Exception error) { Log(error.Message); } }
         try { soundPlayer.Dispose(); }
         catch (Exception error) { Log($"[SoundError] {error}"); }
         overlay.Close(); allowClose = true; Close();

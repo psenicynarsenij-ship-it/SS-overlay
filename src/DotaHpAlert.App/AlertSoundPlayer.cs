@@ -9,7 +9,27 @@ namespace DotaHpAlert.App;
 internal sealed class AlertSoundPlayer : ISoundChannel, IDisposable
 {
     private WaveOutEvent? output;
-    private WaveFileReader? reader;
+    private WaveStream? reader;
+    public string? CustomPath { get; set; }
+    public Action<string>? Diagnostic { get; set; }
+    public static WaveStream OpenAudio(string path) => Path.GetExtension(path).ToLowerInvariant() switch
+    {
+        ".wav" => new WaveFileReader(path),
+        ".mp3" => new Mp3FileReaderBase(path, format => new AcmMp3FrameDecompressor(format)),
+        _ => throw new InvalidDataException("Поддерживаются WAV и MP3.")
+    };
+    public static void ValidateAudio(string path)
+    {
+        using var audio = OpenAudio(path);
+        if (audio.TotalTime <= TimeSpan.Zero || audio.TotalTime > TimeSpan.FromSeconds(60))
+            throw new InvalidDataException("Длительность звука должна быть от 0 до 60 секунд.");
+        if(audio.WaveFormat.Channels is <1 or >2 || audio.WaveFormat.SampleRate is <8000 or >192000)
+            throw new InvalidDataException("Поддерживается mono/stereo, 8–192 кГц.");
+        var samples=audio.ToSampleProvider();
+        var buffer = new float[4096]; long count = 0;
+        while (true) { var read = samples.Read(buffer,0,buffer.Length); if(read==0) break; count+=read; }
+        if(count==0) throw new InvalidDataException("Нет аудиоданных.");
+    }
     private EventHandler<StoppedEventArgs>? stopped;
 
     public void Play(double volume, Action<Exception?> completed)
@@ -17,7 +37,15 @@ internal sealed class AlertSoundPlayer : ISoundChannel, IDisposable
         Stop();
         try
         {
-            reader = new WaveFileReader(Path.Combine(AppContext.BaseDirectory, "sounds", "hp-alert.wav"));
+            reader = UserSoundStore.OpenWithFallback(CustomPath, path =>
+            {
+                ValidateAudio(path);
+                return OpenAudio(path);
+            }, Path.Combine(AppContext.BaseDirectory, "sounds", "hp-alert.wav"), message =>
+            {
+                CustomPath = null;
+                Diagnostic?.Invoke(message);
+            });
             var samples = new VolumeSampleProvider(reader.ToSampleProvider()) { Volume = (float)volume };
             var device = new WaveOutEvent { DesiredLatency = 80 };
             output = device;

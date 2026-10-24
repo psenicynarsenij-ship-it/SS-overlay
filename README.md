@@ -53,7 +53,7 @@ DPI и расположение интерфейса требуют ручной
 dotnet publish src/DotaHpAlert.App -c Release -r win-x64 --self-contained true -p:RestoreLockedMode=false -o artifacts/win-x64
 ```
 
-Запускать `artifacts/win-x64/DotaHpAlert.App.exe`. Копировать **всю папку**, включая `x64/`,
+Запускать `artifacts/win-x64/SS-Overlay.exe`. Копировать **всю папку**, включая `x64/`,
 `tessdata/` и `demo/`. .NET включён в публикацию; VC++ runtime остаётся системным условием.
 Не включены trimming и single-file, чтобы сохранить загрузку нативных DLL и модели.
 Публикация занимает около 172 МБ на диске в проверенной среде, основная часть — .NET/WPF runtime.
@@ -191,3 +191,11 @@ dotnet test tests/DotaHpAlert.WindowsTests -c Release
 
 Они проверяют создание WPF HWND, topmost/click-through/no-activate, положение на мониторе
 и декодирование WAV с программной громкостью. Они не проверяют реальную игру или аудиовыход.
+
+## Fluent Dark — рабочая версия SS Overlay (спринт 3)
+
+Самостоятельная Windows x64 сборка: артефакт **SS-Overlay-Fluent-Dark** → распаковать всю папку →
+**SS-Overlay.exe**. Это рабочее приложение, отдельное от DesignPreview.
+Новый интерфейс, оверлей SUN STRIKE с центральным HP, пресеты позиции, импорт WAV/MP3,
+прослушивание и fallback описаны в [docs/fluent/README.md](docs/fluent/README.md).
+Пользовательские аудиофайлы без подтверждённых прав не включены в публичную сборку.

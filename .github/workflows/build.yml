@@ -9,6 +9,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       OMP_THREAD_LIMIT: '1'
+      SS_UI_SCREENSHOTS: '${{ github.workspace }}/artifacts/fluent-screenshots'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
@@ -31,8 +32,15 @@ jobs:
         if: runner.os == 'Windows'
         uses: actions/upload-artifact@v4
         with:
-          name: DotaHpAlert-win-x64
+          name: SS-Overlay-Fluent-Dark
           path: artifacts/win-x64/
+      - name: Upload actual WPF layout renders
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: SS-Overlay-Fluent-Dark-Screenshots
+          path: artifacts/fluent-screenshots/*.png
+          if-no-files-found: error
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4

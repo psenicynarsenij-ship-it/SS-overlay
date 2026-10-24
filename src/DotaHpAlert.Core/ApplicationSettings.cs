@@ -16,6 +16,9 @@ public sealed record ApplicationSettings
     public string WindowTitle { get; init; } = "Dota 2";
     public int CaptureIntervalMs { get; init; } = 500;
     public double MinimumConfidence { get; init; } = 0.65;
+    public string? SoundFilePath { get; init; }
+    public string OverlayPosition { get; init; } = "Custom";
+    public bool OverlayAnimation { get; init; } = true;
     public double SoundVolume { get; init; } = 0.7;
     public double OverlayLeft { get; init; } = 30;
     public double OverlayTop { get; init; } = 30;
@@ -23,6 +26,8 @@ public sealed record ApplicationSettings
     {
         if (Alerts is null || Region is null) throw new ArgumentException("Missing settings section.");
         Alerts.Validate(); Region.Validate();
+        if (OverlayPosition is not ("Custom" or "TopLeft" or "TopCenter") || SoundFilePath?.Length > 32768)
+            throw new ArgumentException("Неверная позиция или путь звука.");
         new NotificationOptions(OverlayLeft, OverlayTop, SoundVolume).Validate();
         if (string.IsNullOrWhiteSpace(WindowTitle) || WindowTitle.Length > 256 || CaptureIntervalMs < 100 || CaptureIntervalMs > 10000 ||
             !double.IsFinite(MinimumConfidence) || MinimumConfidence < 0 || MinimumConfidence > 1 ||
