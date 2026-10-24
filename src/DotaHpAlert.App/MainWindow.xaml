@@ -1,0 +1,1 @@
+<Window x:Class="DotaHpAlert.App.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Dota HP Alert" Width="420" Height="180"><TextBlock Text="Dota HP Alert — фундамент проекта" HorizontalAlignment="Center" VerticalAlignment="Center" /></Window>
