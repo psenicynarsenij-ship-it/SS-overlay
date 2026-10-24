@@ -1,4 +1,4 @@
-# Dota HP Alert
+# SS Overlay — Dota HP Alert
 
 Внешний оверлей для Windows 11 x64, C# / .NET 8 / WPF. Читает **абсолютное числовое HP**
 из небольшой заданной области интерфейса Dota 2 и передаёт измерения в `AlertEngine`.

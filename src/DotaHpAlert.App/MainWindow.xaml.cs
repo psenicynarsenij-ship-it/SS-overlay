@@ -18,7 +18,7 @@ public partial class MainWindow : Window
     private readonly Queue<string> messages = new();
     private CancellationTokenSource? cancellation;
     private Task? worker;
-    private bool demoMode;
+    private bool demoMode, viewingImage;
     private string? selectedSound;
     private string positionPreset = "Custom";
     private bool changingPosition;
@@ -93,7 +93,7 @@ public partial class MainWindow : Window
             acceptAlerts = settings.Alerts.InvokerEnabled;
             if (!acceptAlerts) Log("Профиль Invoker выключен: OCR работает, уведомления отключены.");
             Status.Text = demo ? "Демо: реальные изображения → OCR → AlertEngine" : "Ожидание окна игры на переднем плане…";
-            demoMode=demo;
+            demoMode=demo; viewingImage=false;
             var demoDirectory = demo ? Path.Combine(AppContext.BaseDirectory, "demo") : null;
             await RunWorker(token => MonitorSession.RunAsync(settings, demoDirectory,
                 update => Dispatcher.InvokeAsync(() => ShowUpdate(update, settings)).Task, token));
@@ -165,14 +165,14 @@ public partial class MainWindow : Window
         var result = update.Recognition;
         CurrentHp.Text = result?.Reading.IsValid==true ? $"{result.Reading.CurrentHp} HP" : "— HP";
         RecognitionConfidence.Text = result is null ? "Уверенность OCR: —" : $"Уверенность OCR: {result.Reading.Confidence:P0}";
-        GameState.Text=result is null ? "Источник кадров недоступен" : demoMode ? "Источник: демонстрационные изображения" : "Окно Dota 2: кадр получен";
+        GameState.Text=result is null ? "Источник кадров недоступен" : viewingImage ? "Источник: файл изображения" : demoMode ? "Источник: демонстрационные изображения" : "Окно Dota 2: кадр получен";
         if (result is null)
         {
             Status.Text = update.Message; Preview.Source = null; Timing.Text = "Кадр недоступен"; notifications.Stop();
         }
         else
         {
-            Status.Text = result.Reading.IsValid ? "Мониторинг активен" : "Мониторинг активен · данные недостоверны";
+            Status.Text = viewingImage ? "Просмотр OCR изображения" : result.Reading.IsValid ? "Мониторинг активен" : "Мониторинг активен · данные недостоверны";
             Timing.Text = $"OCR: {result.Duration.TotalMilliseconds:F1} мс | цикл: {update.TotalDuration.TotalMilliseconds:F1} мс | уверенность: {result.Reading.Confidence:P0} | текст: {result.RawText}";
         }
         Log($"{update.Message}; {update.Decision?.Reason}");
@@ -215,7 +215,7 @@ public partial class MainWindow : Window
         if (dialog.ShowDialog(this) != true) return;
         try
         {
-            var settings = ReadSettings(); acceptAlerts = false;
+            var settings = ReadSettings(); acceptAlerts = false; viewingImage=true;
             await RunWorker(async token =>
             {
                 using var recognizer = new HpRecognizer(Path.Combine(AppContext.BaseDirectory, "tessdata"), new() { MinimumConfidence = settings.MinimumConfidence });
@@ -279,8 +279,7 @@ public partial class MainWindow : Window
         if(worker is not null) await StopAsync();
         if(closing) return;
         soundPlayer.CustomPath=selectedSound;
-        notifications.Route(new(AlertAction.Show,AlertState.Active,AlertReason.SettingsUpdated,true,false),0,
-            new(0,0,SoundVolume.Value),true);
+        notifications.PreviewSound(SoundVolume.Value);
     }
     private void SoundFallback(string message)
     {
