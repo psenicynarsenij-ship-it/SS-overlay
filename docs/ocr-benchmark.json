@@ -1,0 +1,1658 @@
+[
+  {
+    "Preprocessing": "Grayscale",
+    "Psm": 7,
+    "Correct": 11,
+    "Total": 13,
+    "MedianMs": 6.7367,
+    "P95Ms": 20.8407,
+    "InitializationMs": 93.8543,
+    "DecodeAndOcrMedianMs": 8.0912,
+    "DecodeAndOcrP95Ms": 45.0983,
+    "Runtime": ".NET 8.0.32",
+    "OS": "Debian GNU/Linux 13 (trixie)",
+    "Results": [
+      {
+        "File": "synthetic/healthy.png",
+        "Expected": 800,
+        "RawText": "800 / 1200",
+        "Reading": {
+          "CurrentHp": 800,
+          "MeasuredAt": "2026-10-24T15:26:55.2214567+00:00",
+          "Confidence": 0.9,
+          "IsValid": true,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/threshold.png",
+        "Expected": 350,
+        "RawText": "350 / 1200",
+        "Reading": {
+          "CurrentHp": 350,
+          "MeasuredAt": "2026-10-24T15:26:55.2928397+00:00",
+          "Confidence": 0.91,
+          "IsValid": true,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/low.png",
+        "Expected": 349,
+        "RawText": "349 / 1200",
+        "Reading": {
+          "CurrentHp": 349,
+          "MeasuredAt": "2026-10-24T15:26:55.377018+00:00",
+          "Confidence": 0.92,
+          "IsValid": true,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/critical.png",
+        "Expected": 25,
+        "RawText": "25/1200",
+        "Reading": {
+          "CurrentHp": 25,
+          "MeasuredAt": "2026-10-24T15:26:55.4417262+00:00",
+          "Confidence": 0.54,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/zero.png",
+        "Expected": 0,
+        "RawText": "0/1200",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:26:55.5060396+00:00",
+          "Confidence": 0.95,
+          "IsValid": true,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/four-digit.png",
+        "Expected": 2345,
+        "RawText": "2345 / 3000",
+        "Reading": {
+          "CurrentHp": 2345,
+          "MeasuredAt": "2026-10-24T15:26:55.6095+00:00",
+          "Confidence": 0.93,
+          "IsValid": true,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/single.png",
+        "Expected": 320,
+        "RawText": "320",
+        "Reading": {
+          "CurrentHp": 320,
+          "MeasuredAt": "2026-10-24T15:26:55.6699758+00:00",
+          "Confidence": 0.96,
+          "IsValid": true,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/menu.png",
+        "Expected": null,
+        "RawText": "SETTINGS",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:26:55.7607834+00:00",
+          "Confidence": 0.96,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/bad-fraction.png",
+        "Expected": null,
+        "RawText": "800 / 100",
+        "Reading": {
+          "CurrentHp": 800,
+          "MeasuredAt": "2026-10-24T15:26:55.8592789+00:00",
+          "Confidence": 0.94,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/blank.png",
+        "Expected": null,
+        "RawText": "|",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:26:56.0757187+00:00",
+          "Confidence": 0.56,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/noise.png",
+        "Expected": null,
+        "RawText": "eas",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:26:56.3185078+00:00",
+          "Confidence": 0.15,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "Dota 2 Screenshot 2026.10.24 - 17.55.17.90.png",
+        "Expected": 2298,
+        "RawText": "",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:26:56.7763759+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "Dota 2 Screenshot 2026.10.24 - 18.02.12.14.png",
+        "Expected": 59,
+        "RawText": "59 /538",
+        "Reading": {
+          "CurrentHp": 59,
+          "MeasuredAt": "2026-10-24T15:26:57.2611497+00:00",
+          "Confidence": 0.9,
+          "IsValid": true,
+          "IsAlive": null
+        },
+        "Passed": true
+      }
+    ]
+  },
+  {
+    "Preprocessing": "Grayscale",
+    "Psm": 8,
+    "Correct": 4,
+    "Total": 13,
+    "MedianMs": 7.3389,
+    "P95Ms": 19.0023,
+    "InitializationMs": 74.2972,
+    "DecodeAndOcrMedianMs": 8.5865,
+    "DecodeAndOcrP95Ms": 43.9805,
+    "Runtime": ".NET 8.0.32",
+    "OS": "Debian GNU/Linux 13 (trixie)",
+    "Results": [
+      {
+        "File": "synthetic/healthy.png",
+        "Expected": 800,
+        "RawText": "\u2014\u2014 800/1200",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:26:57.4643297+00:00",
+          "Confidence": 0.03,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/threshold.png",
+        "Expected": 350,
+        "RawText": "3850/1200",
+        "Reading": {
+          "CurrentHp": 3850,
+          "MeasuredAt": "2026-10-24T15:26:57.5500626+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/low.png",
+        "Expected": 349,
+        "RawText": "\u2014 349/1200",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:26:57.6451574+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/critical.png",
+        "Expected": 25,
+        "RawText": "\u2014 25/1200",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:26:57.7228538+00:00",
+          "Confidence": 0.13,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/zero.png",
+        "Expected": 0,
+        "RawText": "0/1200",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:26:57.7853951+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/four-digit.png",
+        "Expected": 2345,
+        "RawText": "_ 2345/3000",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:26:57.8506528+00:00",
+          "Confidence": 0.06,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/single.png",
+        "Expected": 320,
+        "RawText": "8200",
+        "Reading": {
+          "CurrentHp": 8200,
+          "MeasuredAt": "2026-10-24T15:26:57.9880084+00:00",
+          "Confidence": 0.36,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/menu.png",
+        "Expected": null,
+        "RawText": "\u2014 SETTINGS",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:26:58.0680081+00:00",
+          "Confidence": 0.09,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/bad-fraction.png",
+        "Expected": null,
+        "RawText": "\u2014 800/100",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:26:58.1313271+00:00",
+          "Confidence": 0.14,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/blank.png",
+        "Expected": null,
+        "RawText": "|",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:26:58.307369+00:00",
+          "Confidence": 0.56,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/noise.png",
+        "Expected": null,
+        "RawText": "emcee",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:26:58.5162073+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "Dota 2 Screenshot 2026.10.24 - 17.55.17.90.png",
+        "Expected": 2298,
+        "RawText": "(Waz9817 22980",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:26:58.9581701+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "Dota 2 Screenshot 2026.10.24 - 18.02.12.14.png",
+        "Expected": 59,
+        "RawText": "59/538",
+        "Reading": {
+          "CurrentHp": 59,
+          "MeasuredAt": "2026-10-24T15:26:59.4503228+00:00",
+          "Confidence": 0.4,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      }
+    ]
+  },
+  {
+    "Preprocessing": "Grayscale",
+    "Psm": 13,
+    "Correct": 4,
+    "Total": 13,
+    "MedianMs": 6.4714,
+    "P95Ms": 11.8946,
+    "InitializationMs": 67.6785,
+    "DecodeAndOcrMedianMs": 8.3486,
+    "DecodeAndOcrP95Ms": 45.3619,
+    "Runtime": ".NET 8.0.32",
+    "OS": "Debian GNU/Linux 13 (trixie)",
+    "Results": [
+      {
+        "File": "synthetic/healthy.png",
+        "Expected": 800,
+        "RawText": "\u2014\u2014 800/1200",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:26:59.639263+00:00",
+          "Confidence": 0.03,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/threshold.png",
+        "Expected": 350,
+        "RawText": "3850/1200",
+        "Reading": {
+          "CurrentHp": 3850,
+          "MeasuredAt": "2026-10-24T15:26:59.7138789+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/low.png",
+        "Expected": 349,
+        "RawText": "\u2014 349/1200",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:26:59.8205756+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/critical.png",
+        "Expected": 25,
+        "RawText": "\u2014 25/1200",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:26:59.8897916+00:00",
+          "Confidence": 0.13,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/zero.png",
+        "Expected": 0,
+        "RawText": "0/1200",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:26:59.9556403+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/four-digit.png",
+        "Expected": 2345,
+        "RawText": "_ 2345/3000",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:00.0242512+00:00",
+          "Confidence": 0.06,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/single.png",
+        "Expected": 320,
+        "RawText": "8200",
+        "Reading": {
+          "CurrentHp": 8200,
+          "MeasuredAt": "2026-10-24T15:27:00.1315557+00:00",
+          "Confidence": 0.36,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/menu.png",
+        "Expected": null,
+        "RawText": "\u2014 SETTINGS",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:00.2155156+00:00",
+          "Confidence": 0.09,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/bad-fraction.png",
+        "Expected": null,
+        "RawText": "\u2014 800/100",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:00.2820474+00:00",
+          "Confidence": 0.14,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/blank.png",
+        "Expected": null,
+        "RawText": "|",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:00.3742346+00:00",
+          "Confidence": 0.56,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/noise.png",
+        "Expected": null,
+        "RawText": "emcee",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:00.4911874+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "Dota 2 Screenshot 2026.10.24 - 17.55.17.90.png",
+        "Expected": 2298,
+        "RawText": "(Waz9817 22980",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:00.9632307+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "Dota 2 Screenshot 2026.10.24 - 18.02.12.14.png",
+        "Expected": 59,
+        "RawText": "59/538",
+        "Reading": {
+          "CurrentHp": 59,
+          "MeasuredAt": "2026-10-24T15:27:01.4504824+00:00",
+          "Confidence": 0.4,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      }
+    ]
+  },
+  {
+    "Preprocessing": "BrightText",
+    "Psm": 7,
+    "Correct": 11,
+    "Total": 13,
+    "MedianMs": 5.9556,
+    "P95Ms": 8.3341,
+    "InitializationMs": 62.6475,
+    "DecodeAndOcrMedianMs": 6.2358,
+    "DecodeAndOcrP95Ms": 47.8063,
+    "Runtime": ".NET 8.0.32",
+    "OS": "Debian GNU/Linux 13 (trixie)",
+    "Results": [
+      {
+        "File": "synthetic/healthy.png",
+        "Expected": 800,
+        "RawText": "800 / 1200",
+        "Reading": {
+          "CurrentHp": 800,
+          "MeasuredAt": "2026-10-24T15:27:01.6285881+00:00",
+          "Confidence": 0.68,
+          "IsValid": true,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/threshold.png",
+        "Expected": 350,
+        "RawText": "350 / 1200",
+        "Reading": {
+          "CurrentHp": 350,
+          "MeasuredAt": "2026-10-24T15:27:01.6933096+00:00",
+          "Confidence": 0.83,
+          "IsValid": true,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/low.png",
+        "Expected": 349,
+        "RawText": "349 / 1200",
+        "Reading": {
+          "CurrentHp": 349,
+          "MeasuredAt": "2026-10-24T15:27:01.7704766+00:00",
+          "Confidence": 0.33,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/critical.png",
+        "Expected": 25,
+        "RawText": "25/1200",
+        "Reading": {
+          "CurrentHp": 25,
+          "MeasuredAt": "2026-10-24T15:27:01.8299899+00:00",
+          "Confidence": 0.74,
+          "IsValid": true,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/zero.png",
+        "Expected": 0,
+        "RawText": "0/1200",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:01.9065751+00:00",
+          "Confidence": 0.91,
+          "IsValid": true,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/four-digit.png",
+        "Expected": 2345,
+        "RawText": "2345 / 3000",
+        "Reading": {
+          "CurrentHp": 2345,
+          "MeasuredAt": "2026-10-24T15:27:01.9880759+00:00",
+          "Confidence": 0.93,
+          "IsValid": true,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/single.png",
+        "Expected": 320,
+        "RawText": "320",
+        "Reading": {
+          "CurrentHp": 320,
+          "MeasuredAt": "2026-10-24T15:27:02.0192268+00:00",
+          "Confidence": 0.96,
+          "IsValid": true,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/menu.png",
+        "Expected": null,
+        "RawText": "SETTINGS",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:02.0749781+00:00",
+          "Confidence": 0.96,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/bad-fraction.png",
+        "Expected": null,
+        "RawText": "800 / 100",
+        "Reading": {
+          "CurrentHp": 800,
+          "MeasuredAt": "2026-10-24T15:27:02.1331611+00:00",
+          "Confidence": 0.74,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/blank.png",
+        "Expected": null,
+        "RawText": "",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:02.2174432+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/noise.png",
+        "Expected": null,
+        "RawText": "",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:02.304154+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "Dota 2 Screenshot 2026.10.24 - 17.55.17.90.png",
+        "Expected": 2298,
+        "RawText": "2298 / 2298",
+        "Reading": {
+          "CurrentHp": 2298,
+          "MeasuredAt": "2026-10-24T15:27:02.7066901+00:00",
+          "Confidence": 0.38,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "Dota 2 Screenshot 2026.10.24 - 18.02.12.14.png",
+        "Expected": 59,
+        "RawText": "59 /538",
+        "Reading": {
+          "CurrentHp": 59,
+          "MeasuredAt": "2026-10-24T15:27:03.2525218+00:00",
+          "Confidence": 0.9,
+          "IsValid": true,
+          "IsAlive": null
+        },
+        "Passed": true
+      }
+    ]
+  },
+  {
+    "Preprocessing": "BrightText",
+    "Psm": 8,
+    "Correct": 4,
+    "Total": 13,
+    "MedianMs": 6.3128,
+    "P95Ms": 10.0786,
+    "InitializationMs": 76.6032,
+    "DecodeAndOcrMedianMs": 6.7049,
+    "DecodeAndOcrP95Ms": 50.7554,
+    "Runtime": ".NET 8.0.32",
+    "OS": "Debian GNU/Linux 13 (trixie)",
+    "Results": [
+      {
+        "File": "synthetic/healthy.png",
+        "Expected": 800,
+        "RawText": "\u2014 800/1200",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:03.447696+00:00",
+          "Confidence": 0.16,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/threshold.png",
+        "Expected": 350,
+        "RawText": "3850/1200",
+        "Reading": {
+          "CurrentHp": 3850,
+          "MeasuredAt": "2026-10-24T15:27:03.5148146+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/low.png",
+        "Expected": 349,
+        "RawText": "3349/1200",
+        "Reading": {
+          "CurrentHp": 3349,
+          "MeasuredAt": "2026-10-24T15:27:03.5855707+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/critical.png",
+        "Expected": 25,
+        "RawText": "25/1200",
+        "Reading": {
+          "CurrentHp": 25,
+          "MeasuredAt": "2026-10-24T15:27:03.6551769+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/zero.png",
+        "Expected": 0,
+        "RawText": "0/1200",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:03.7221456+00:00",
+          "Confidence": 0.21,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/four-digit.png",
+        "Expected": 2345,
+        "RawText": "2345/3000",
+        "Reading": {
+          "CurrentHp": 2345,
+          "MeasuredAt": "2026-10-24T15:27:03.7936897+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/single.png",
+        "Expected": 320,
+        "RawText": "B20",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:03.8974395+00:00",
+          "Confidence": 0.42,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/menu.png",
+        "Expected": null,
+        "RawText": "SETTINGS",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:03.9699475+00:00",
+          "Confidence": 0.22,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/bad-fraction.png",
+        "Expected": null,
+        "RawText": "800/100",
+        "Reading": {
+          "CurrentHp": 800,
+          "MeasuredAt": "2026-10-24T15:27:04.0352587+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/blank.png",
+        "Expected": null,
+        "RawText": "",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:04.1259636+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/noise.png",
+        "Expected": null,
+        "RawText": "",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:04.2192585+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "Dota 2 Screenshot 2026.10.24 - 17.55.17.90.png",
+        "Expected": 2298,
+        "RawText": "2298/2298",
+        "Reading": {
+          "CurrentHp": 2298,
+          "MeasuredAt": "2026-10-24T15:27:04.6385202+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "Dota 2 Screenshot 2026.10.24 - 18.02.12.14.png",
+        "Expected": 59,
+        "RawText": "89/538",
+        "Reading": {
+          "CurrentHp": 89,
+          "MeasuredAt": "2026-10-24T15:27:05.1993429+00:00",
+          "Confidence": 0.39,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      }
+    ]
+  },
+  {
+    "Preprocessing": "BrightText",
+    "Psm": 13,
+    "Correct": 4,
+    "Total": 13,
+    "MedianMs": 6.3571,
+    "P95Ms": 9.9378,
+    "InitializationMs": 74.4872,
+    "DecodeAndOcrMedianMs": 6.6089,
+    "DecodeAndOcrP95Ms": 48.7463,
+    "Runtime": ".NET 8.0.32",
+    "OS": "Debian GNU/Linux 13 (trixie)",
+    "Results": [
+      {
+        "File": "synthetic/healthy.png",
+        "Expected": 800,
+        "RawText": "\u2014 800/1200",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:05.3983026+00:00",
+          "Confidence": 0.16,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/threshold.png",
+        "Expected": 350,
+        "RawText": "3850/1200",
+        "Reading": {
+          "CurrentHp": 3850,
+          "MeasuredAt": "2026-10-24T15:27:05.4668802+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/low.png",
+        "Expected": 349,
+        "RawText": "3349/1200",
+        "Reading": {
+          "CurrentHp": 3349,
+          "MeasuredAt": "2026-10-24T15:27:05.5353831+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/critical.png",
+        "Expected": 25,
+        "RawText": "25/1200",
+        "Reading": {
+          "CurrentHp": 25,
+          "MeasuredAt": "2026-10-24T15:27:05.5989983+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/zero.png",
+        "Expected": 0,
+        "RawText": "0/1200",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:05.6636652+00:00",
+          "Confidence": 0.21,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/four-digit.png",
+        "Expected": 2345,
+        "RawText": "2345/3000",
+        "Reading": {
+          "CurrentHp": 2345,
+          "MeasuredAt": "2026-10-24T15:27:05.7306801+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/single.png",
+        "Expected": 320,
+        "RawText": "B20",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:05.8373762+00:00",
+          "Confidence": 0.42,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/menu.png",
+        "Expected": null,
+        "RawText": "SETTINGS",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:05.9068986+00:00",
+          "Confidence": 0.22,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/bad-fraction.png",
+        "Expected": null,
+        "RawText": "800/100",
+        "Reading": {
+          "CurrentHp": 800,
+          "MeasuredAt": "2026-10-24T15:27:05.977645+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/blank.png",
+        "Expected": null,
+        "RawText": "",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:06.0694501+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/noise.png",
+        "Expected": null,
+        "RawText": "",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:06.1652281+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "Dota 2 Screenshot 2026.10.24 - 17.55.17.90.png",
+        "Expected": 2298,
+        "RawText": "2298/2298",
+        "Reading": {
+          "CurrentHp": 2298,
+          "MeasuredAt": "2026-10-24T15:27:06.608009+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "Dota 2 Screenshot 2026.10.24 - 18.02.12.14.png",
+        "Expected": 59,
+        "RawText": "89/538",
+        "Reading": {
+          "CurrentHp": 89,
+          "MeasuredAt": "2026-10-24T15:27:07.1602254+00:00",
+          "Confidence": 0.39,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      }
+    ]
+  },
+  {
+    "Preprocessing": "Otsu",
+    "Psm": 7,
+    "Correct": 13,
+    "Total": 13,
+    "MedianMs": 5.5672,
+    "P95Ms": 14.5898,
+    "InitializationMs": 56.8219,
+    "DecodeAndOcrMedianMs": 5.7766,
+    "DecodeAndOcrP95Ms": 47.0756,
+    "Runtime": ".NET 8.0.32",
+    "OS": "Debian GNU/Linux 13 (trixie)",
+    "Results": [
+      {
+        "File": "synthetic/healthy.png",
+        "Expected": 800,
+        "RawText": "800 / 1200",
+        "Reading": {
+          "CurrentHp": 800,
+          "MeasuredAt": "2026-10-24T15:27:07.3511982+00:00",
+          "Confidence": 0.92,
+          "IsValid": true,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/threshold.png",
+        "Expected": 350,
+        "RawText": "350 / 1200",
+        "Reading": {
+          "CurrentHp": 350,
+          "MeasuredAt": "2026-10-24T15:27:07.4158097+00:00",
+          "Confidence": 0.92,
+          "IsValid": true,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/low.png",
+        "Expected": 349,
+        "RawText": "349 / 1200",
+        "Reading": {
+          "CurrentHp": 349,
+          "MeasuredAt": "2026-10-24T15:27:07.4816212+00:00",
+          "Confidence": 0.91,
+          "IsValid": true,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/critical.png",
+        "Expected": 25,
+        "RawText": "25/1200",
+        "Reading": {
+          "CurrentHp": 25,
+          "MeasuredAt": "2026-10-24T15:27:07.5406448+00:00",
+          "Confidence": 0.71,
+          "IsValid": true,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/zero.png",
+        "Expected": 0,
+        "RawText": "0/1200",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:07.5946383+00:00",
+          "Confidence": 0.94,
+          "IsValid": true,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/four-digit.png",
+        "Expected": 2345,
+        "RawText": "2345 / 3000",
+        "Reading": {
+          "CurrentHp": 2345,
+          "MeasuredAt": "2026-10-24T15:27:07.6666576+00:00",
+          "Confidence": 0.93,
+          "IsValid": true,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/single.png",
+        "Expected": 320,
+        "RawText": "320",
+        "Reading": {
+          "CurrentHp": 320,
+          "MeasuredAt": "2026-10-24T15:27:07.7011641+00:00",
+          "Confidence": 0.96,
+          "IsValid": true,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/menu.png",
+        "Expected": null,
+        "RawText": "SETTINGS",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:07.75837+00:00",
+          "Confidence": 0.95,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/bad-fraction.png",
+        "Expected": null,
+        "RawText": "800 / 100",
+        "Reading": {
+          "CurrentHp": 800,
+          "MeasuredAt": "2026-10-24T15:27:07.8192568+00:00",
+          "Confidence": 0.93,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/blank.png",
+        "Expected": null,
+        "RawText": "P|",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:07.9752485+00:00",
+          "Confidence": 0.47,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/noise.png",
+        "Expected": null,
+        "RawText": "",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:08.0157683+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "Dota 2 Screenshot 2026.10.24 - 17.55.17.90.png",
+        "Expected": 2298,
+        "RawText": "2298 / 2298",
+        "Reading": {
+          "CurrentHp": 2298,
+          "MeasuredAt": "2026-10-24T15:27:08.4676912+00:00",
+          "Confidence": 0.91,
+          "IsValid": true,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "Dota 2 Screenshot 2026.10.24 - 18.02.12.14.png",
+        "Expected": 59,
+        "RawText": "59 /538",
+        "Reading": {
+          "CurrentHp": 59,
+          "MeasuredAt": "2026-10-24T15:27:08.9948618+00:00",
+          "Confidence": 0.91,
+          "IsValid": true,
+          "IsAlive": null
+        },
+        "Passed": true
+      }
+    ]
+  },
+  {
+    "Preprocessing": "Otsu",
+    "Psm": 8,
+    "Correct": 4,
+    "Total": 13,
+    "MedianMs": 6.2685,
+    "P95Ms": 10.9399,
+    "InitializationMs": 59.7068,
+    "DecodeAndOcrMedianMs": 6.5292,
+    "DecodeAndOcrP95Ms": 49.5574,
+    "Runtime": ".NET 8.0.32",
+    "OS": "Debian GNU/Linux 13 (trixie)",
+    "Results": [
+      {
+        "File": "synthetic/healthy.png",
+        "Expected": 800,
+        "RawText": "\u2014\u2014 800/1200",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:09.1663003+00:00",
+          "Confidence": 0.05,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/threshold.png",
+        "Expected": 350,
+        "RawText": "3850/1200",
+        "Reading": {
+          "CurrentHp": 3850,
+          "MeasuredAt": "2026-10-24T15:27:09.2357433+00:00",
+          "Confidence": 0.14,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/low.png",
+        "Expected": 349,
+        "RawText": "3349/1200",
+        "Reading": {
+          "CurrentHp": 3349,
+          "MeasuredAt": "2026-10-24T15:27:09.3085542+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/critical.png",
+        "Expected": 25,
+        "RawText": "25/1200",
+        "Reading": {
+          "CurrentHp": 25,
+          "MeasuredAt": "2026-10-24T15:27:09.3720264+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/zero.png",
+        "Expected": 0,
+        "RawText": "0/1200",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:09.4352158+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/four-digit.png",
+        "Expected": 2345,
+        "RawText": "2345/3000",
+        "Reading": {
+          "CurrentHp": 2345,
+          "MeasuredAt": "2026-10-24T15:27:09.5054542+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/single.png",
+        "Expected": 320,
+        "RawText": "B20",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:09.624458+00:00",
+          "Confidence": 0.44,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/menu.png",
+        "Expected": null,
+        "RawText": "SETTINGS",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:09.6963006+00:00",
+          "Confidence": 0.12,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/bad-fraction.png",
+        "Expected": null,
+        "RawText": "800/100",
+        "Reading": {
+          "CurrentHp": 800,
+          "MeasuredAt": "2026-10-24T15:27:09.7708488+00:00",
+          "Confidence": 0.11,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/blank.png",
+        "Expected": null,
+        "RawText": "Es",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:09.8389536+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/noise.png",
+        "Expected": null,
+        "RawText": "Ue ee",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:09.9517477+00:00",
+          "Confidence": 0.21,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "Dota 2 Screenshot 2026.10.24 - 17.55.17.90.png",
+        "Expected": 2298,
+        "RawText": "2298/2298",
+        "Reading": {
+          "CurrentHp": 2298,
+          "MeasuredAt": "2026-10-24T15:27:10.373228+00:00",
+          "Confidence": 0.03,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "Dota 2 Screenshot 2026.10.24 - 18.02.12.14.png",
+        "Expected": 59,
+        "RawText": "89/538",
+        "Reading": {
+          "CurrentHp": 89,
+          "MeasuredAt": "2026-10-24T15:27:10.9252116+00:00",
+          "Confidence": 0.39,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      }
+    ]
+  },
+  {
+    "Preprocessing": "Otsu",
+    "Psm": 13,
+    "Correct": 4,
+    "Total": 13,
+    "MedianMs": 5.9334,
+    "P95Ms": 10.9515,
+    "InitializationMs": 66.7502,
+    "DecodeAndOcrMedianMs": 6.0775,
+    "DecodeAndOcrP95Ms": 46.6544,
+    "Runtime": ".NET 8.0.32",
+    "OS": "Debian GNU/Linux 13 (trixie)",
+    "Results": [
+      {
+        "File": "synthetic/healthy.png",
+        "Expected": 800,
+        "RawText": "\u2014\u2014 800/1200",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:11.1049224+00:00",
+          "Confidence": 0.05,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/threshold.png",
+        "Expected": 350,
+        "RawText": "3850/1200",
+        "Reading": {
+          "CurrentHp": 3850,
+          "MeasuredAt": "2026-10-24T15:27:11.1705256+00:00",
+          "Confidence": 0.14,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/low.png",
+        "Expected": 349,
+        "RawText": "3349/1200",
+        "Reading": {
+          "CurrentHp": 3349,
+          "MeasuredAt": "2026-10-24T15:27:11.2338214+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/critical.png",
+        "Expected": 25,
+        "RawText": "25/1200",
+        "Reading": {
+          "CurrentHp": 25,
+          "MeasuredAt": "2026-10-24T15:27:11.2958086+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/zero.png",
+        "Expected": 0,
+        "RawText": "0/1200",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:11.3598413+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/four-digit.png",
+        "Expected": 2345,
+        "RawText": "2345/3000",
+        "Reading": {
+          "CurrentHp": 2345,
+          "MeasuredAt": "2026-10-24T15:27:11.438231+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/single.png",
+        "Expected": 320,
+        "RawText": "B20",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:11.562159+00:00",
+          "Confidence": 0.44,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "synthetic/menu.png",
+        "Expected": null,
+        "RawText": "SETTINGS",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:11.6451942+00:00",
+          "Confidence": 0.12,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/bad-fraction.png",
+        "Expected": null,
+        "RawText": "800/100",
+        "Reading": {
+          "CurrentHp": 800,
+          "MeasuredAt": "2026-10-24T15:27:11.7197385+00:00",
+          "Confidence": 0.11,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/blank.png",
+        "Expected": null,
+        "RawText": "Es",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:11.780051+00:00",
+          "Confidence": 0,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "synthetic/noise.png",
+        "Expected": null,
+        "RawText": "Ue ee",
+        "Reading": {
+          "CurrentHp": 0,
+          "MeasuredAt": "2026-10-24T15:27:11.8958858+00:00",
+          "Confidence": 0.21,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": true
+      },
+      {
+        "File": "Dota 2 Screenshot 2026.10.24 - 17.55.17.90.png",
+        "Expected": 2298,
+        "RawText": "2298/2298",
+        "Reading": {
+          "CurrentHp": 2298,
+          "MeasuredAt": "2026-10-24T15:27:12.3078845+00:00",
+          "Confidence": 0.03,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      },
+      {
+        "File": "Dota 2 Screenshot 2026.10.24 - 18.02.12.14.png",
+        "Expected": 59,
+        "RawText": "89/538",
+        "Reading": {
+          "CurrentHp": 89,
+          "MeasuredAt": "2026-10-24T15:27:12.8319428+00:00",
+          "Confidence": 0.39,
+          "IsValid": false,
+          "IsAlive": null
+        },
+        "Passed": false
+      }
+    ]
+  }
+]
