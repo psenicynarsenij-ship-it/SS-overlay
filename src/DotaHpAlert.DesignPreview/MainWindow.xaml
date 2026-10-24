@@ -5,9 +5,23 @@
 </Style>
 <Style TargetType="TabItem">
 <Setter Property="Padding" Value="22,12"/>
+<Setter Property="Foreground" Value="#D6DCE8"/>
+<Setter Property="Template">
+<Setter.Value>
+<ControlTemplate TargetType="TabItem">
+<Border x:Name="TabSurface" Background="#202632" BorderBrush="#343E50" BorderThickness="1" CornerRadius="8,8,0,0" Padding="{TemplateBinding Padding}" Margin="0,0,6,0">
+<ContentPresenter ContentSource="Header" HorizontalAlignment="Center"/>
+</Border>
+<ControlTemplate.Triggers>
+<Trigger Property="IsSelected" Value="True"><Setter TargetName="TabSurface" Property="Background" Value="#39445B"/><Setter Property="Foreground" Value="White"/></Trigger>
+<Trigger Property="IsMouseOver" Value="True"><Setter TargetName="TabSurface" Property="BorderBrush" Value="#A5B4D0"/></Trigger>
+</ControlTemplate.Triggers>
+</ControlTemplate>
+</Setter.Value>
+</Setter>
 </Style>
 </Window.Resources>
-<DockPanel Margin="24">
+<DockPanel Margin="24" Background="#0C0E13">
 <StackPanel DockPanel.Dock="Top" Margin="0,0,0,18">
 <TextBlock Text="DESIGN LAB / SS OVERLAY" FontSize="24" FontWeight="Bold"/>
 <TextBlock Text="Статические референсы • Все показатели вымышлены • Элементы управления декоративные" Foreground="#989FB3" Margin="0,8,0,0"/>
