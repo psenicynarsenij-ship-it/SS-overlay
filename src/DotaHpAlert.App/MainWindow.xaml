@@ -13,6 +13,8 @@
 <TextBlock Text="Повтор, секунды"/><TextBox x:Name="Repeat"/>
 <TextBlock Text="Гистерезис"/><TextBox x:Name="Hysteresis"/>
 <TextBlock Text="Минимальная уверенность OCR (0–1)"/><TextBox x:Name="Confidence"/>
+<TextBlock Text="Громкость предупреждения (0–100%)"/>
+<Slider x:Name="SoundVolume" Minimum="0" Maximum="1" TickFrequency="0.05" IsSnapToTickEnabled="True" ToolTip="{Binding Value, RelativeSource={RelativeSource Self}, StringFormat=P0}"/>
 <TextBlock Text="Интервал захвата, мс (100–10000)"/><TextBox x:Name="Interval"/>
 </StackPanel>
 <StackPanel Grid.Column="1">
@@ -26,6 +28,7 @@
 <WrapPanel Margin="0,14,0,10">
 <Button x:Name="StartButton" Content="Захват игры" Click="StartCapture" Padding="10,6" Margin="0,0,8,4"/>
 <Button x:Name="DemoButton" Content="Демо без Dota" Click="StartDemo" Padding="10,6" Margin="0,0,8,4"/>
+<Button x:Name="TestNotificationButton" Content="Тест уведомления" Click="TestNotification" Padding="10,6" Margin="0,0,8,4"/>
 <Button x:Name="StopButton" Content="Стоп" Click="Stop" IsEnabled="False" Padding="10,6" Margin="0,0,8,4"/>
 <Button x:Name="ImageButton" Content="OCR изображения…" Click="OpenImage" Padding="10,6" Margin="0,0,8,4"/>
 <Button x:Name="SaveButton" Content="Сохранить настройки" Click="Save" Padding="10,6" Margin="0,0,8,4"/>

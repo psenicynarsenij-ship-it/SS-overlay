@@ -12,7 +12,7 @@ public sealed class SettingsTests
         var path = Path.Combine(directory, "settings.json");
         try
         {
-            var settings = new ApplicationSettings { Alerts = new() { InvokerEnabled = true, HpThreshold = 400 }, Region = new(1,2,100,30), OverlayLeft = -500 };
+            var settings = new ApplicationSettings { Alerts = new() { InvokerEnabled = true, HpThreshold = 400 }, Region = new(1,2,100,30), OverlayLeft = -500, SoundVolume = .35 };
             SettingsStore.Save(path, settings); Assert.Equal(settings, SettingsStore.Load(path));
             settings = settings with { CaptureIntervalMs = 200 };
             SettingsStore.Save(path, settings); Assert.Equal(settings, SettingsStore.Load(path));
@@ -34,6 +34,15 @@ public sealed class SettingsTests
         }
         finally { File.Delete(path); }
     }
+    [Fact] public void OldSettingsWithoutVolumeKeepDefault()
+    {
+        var path = Path.GetTempFileName();
+        try { File.WriteAllText(path,"{}"); Assert.Equal(.7,SettingsStore.Load(path).SoundVolume); }
+        finally { File.Delete(path); }
+    }
+    [Theory] [InlineData(-1)] [InlineData(1.1)] [InlineData(double.NaN)]
+    public void InvalidVolumeIsRejected(double volume) =>
+        Assert.Throws<ArgumentException>(() => new ApplicationSettings { SoundVolume=volume }.Validate());
     [Fact] public void InvalidSettingsCannotBeSaved()
     {
         Assert.Throws<ArgumentException>(() => new ApplicationSettings { MinimumConfidence = double.PositiveInfinity }.Validate());

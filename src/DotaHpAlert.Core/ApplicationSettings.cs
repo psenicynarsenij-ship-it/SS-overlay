@@ -16,12 +16,14 @@ public sealed record ApplicationSettings
     public string WindowTitle { get; init; } = "Dota 2";
     public int CaptureIntervalMs { get; init; } = 500;
     public double MinimumConfidence { get; init; } = 0.65;
+    public double SoundVolume { get; init; } = 0.7;
     public double OverlayLeft { get; init; } = 30;
     public double OverlayTop { get; init; } = 30;
     public void Validate()
     {
         if (Alerts is null || Region is null) throw new ArgumentException("Missing settings section.");
         Alerts.Validate(); Region.Validate();
+        new NotificationOptions(OverlayLeft, OverlayTop, SoundVolume).Validate();
         if (string.IsNullOrWhiteSpace(WindowTitle) || WindowTitle.Length > 256 || CaptureIntervalMs < 100 || CaptureIntervalMs > 10000 ||
             !double.IsFinite(MinimumConfidence) || MinimumConfidence < 0 || MinimumConfidence > 1 ||
             !double.IsFinite(OverlayLeft) || !double.IsFinite(OverlayTop) || Math.Abs(OverlayLeft) > 32768 || Math.Abs(OverlayTop) > 32768)

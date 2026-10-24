@@ -1,7 +1,6 @@
 using System.IO;
 using System.ComponentModel;
 using System.Globalization;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using DotaHpAlert.Core;
@@ -14,6 +13,8 @@ public partial class MainWindow : Window
 {
     private readonly string settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DotaHpAlert", "settings.json");
     private readonly OverlayWindow overlay = new();
+    private readonly AlertSoundPlayer soundPlayer = new();
+    private readonly NotificationRouter notifications;
     private readonly Queue<string> messages = new();
     private CancellationTokenSource? cancellation;
     private Task? worker;
@@ -22,6 +23,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        notifications = new NotificationRouter(overlay, soundPlayer, NotificationDiagnostic);
         ApplicationSettings settings;
         try { settings = SettingsStore.Load(settingsPath); }
         catch (Exception error) { settings = new(); Log($"Не удалось загрузить настройки: {error.Message}. Использованы значения по умолчанию; исходный файл сохранён."); }
@@ -30,6 +32,7 @@ public partial class MainWindow : Window
     }
     private void Fill(ApplicationSettings s)
     {
+        SoundVolume.Value = s.SoundVolume;
         Invoker.IsChecked = s.Alerts.InvokerEnabled; Sound.IsChecked = s.Alerts.SoundEnabled; Visual.IsChecked = s.Alerts.VisualEnabled;
         Threshold.Text = s.Alerts.HpThreshold.ToString(); Repeat.Text = s.Alerts.RepeatInterval.TotalSeconds.ToString(CultureInfo.InvariantCulture);
         Hysteresis.Text = s.Alerts.Hysteresis.ToString(); Confidence.Text = s.MinimumConfidence.ToString(CultureInfo.InvariantCulture);
@@ -49,6 +52,7 @@ public partial class MainWindow : Window
                 SoundEnabled = Sound.IsChecked == true, VisualEnabled = Visual.IsChecked == true },
             Region = new(Integer(RegionX.Text), Integer(RegionY.Text), Integer(RegionWidth.Text), Integer(RegionHeight.Text)),
             WindowTitle = GameTitle.Text.Trim(), CaptureIntervalMs = Integer(Interval.Text), MinimumConfidence = Number(Confidence.Text),
+            SoundVolume = SoundVolume.Value,
             OverlayLeft = Number(OverlayX.Text), OverlayTop = Number(OverlayY.Text)
         };
         settings.Validate(); return settings;
@@ -74,14 +78,21 @@ public partial class MainWindow : Window
     {
         var source = new CancellationTokenSource(); cancellation = source;
         SetRunning(true);
-        worker = Task.Run(() => action(source.Token));
-        try { await worker; }
+        var finished = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        worker = finished.Task; // Stop awaits UI cleanup as well as the native worker.
+        try { await Task.Run(() => action(source.Token)); }
         catch (OperationCanceledException) when (source.IsCancellationRequested) { }
         catch (Exception error) { Log($"Ошибка: {error.Message}. Проверьте tessdata, native DLL и VC++ runtime."); }
         finally
         {
-            worker = null; cancellation = null; source.Dispose(); acceptAlerts = false;
-            overlay.Dismiss(); SetRunning(false); Status.Text += " • остановлено";
+            try
+            {
+                acceptAlerts = false; notifications.Stop(); SetRunning(false); Status.Text += " • остановлено";
+            }
+            finally
+            {
+                worker = null; cancellation = null; source.Dispose(); finished.TrySetResult();
+            }
         }
     }
     private void SetRunning(bool running)
@@ -93,7 +104,7 @@ public partial class MainWindow : Window
     }
     private async Task StopAsync()
     {
-        acceptAlerts = false; overlay.Dismiss();
+        acceptAlerts = false; notifications.Stop();
         cancellation?.Cancel();
         var pending = worker;
         if (pending is null) return;
@@ -105,13 +116,17 @@ public partial class MainWindow : Window
     private async void InvokerChanged(object sender, RoutedEventArgs e)
     {
         if (!initialized || Invoker.IsChecked == true) return;
-        acceptAlerts = false; overlay.Dismiss();
+        acceptAlerts = false; notifications.Stop();
         await StopAsync();
         Log("Профиль Invoker отключён: тревога сброшена, захват остановлен.");
     }
     private void ShowUpdate(MonitorUpdate update, ApplicationSettings settings)
     {
         if (closing || cancellation?.IsCancellationRequested == true) return;
+        if (update.Decision is { } routedDecision)
+            notifications.Route(routedDecision, update.Recognition?.Reading.CurrentHp ?? 0,
+                new(settings.OverlayLeft, settings.OverlayTop, settings.SoundVolume),
+                acceptAlerts && Invoker.IsChecked == true);
         if (update.PreviewPng is not null)
         {
             using var stream = new MemoryStream(update.PreviewPng);
@@ -121,23 +136,43 @@ public partial class MainWindow : Window
         var result = update.Recognition;
         if (result is null)
         {
-            Status.Text = update.Message; Preview.Source = null; Timing.Text = "Кадр недоступен"; overlay.Dismiss();
+            Status.Text = update.Message; Preview.Source = null; Timing.Text = "Кадр недоступен"; notifications.Stop();
         }
         else
         {
             Status.Text = $"HP: {(result.Reading.IsValid ? result.Reading.CurrentHp.ToString() : "недостоверно")} | {update.Decision?.State} | {update.Decision?.Action}";
             Timing.Text = $"OCR: {result.Duration.TotalMilliseconds:F1} мс | цикл: {update.TotalDuration.TotalMilliseconds:F1} мс | уверенность: {result.Reading.Confidence:P0} | текст: {result.RawText}";
-            if (!result.Reading.IsValid) overlay.Dismiss();
         }
-        var decision = update.Decision;
-        if (decision?.Action == AlertAction.Reset) overlay.Dismiss();
-        if (acceptAlerts && Invoker.IsChecked == true && decision?.Action is AlertAction.Show or AlertAction.Repeat)
-        {
-            if (decision.ShowVisual) overlay.Notify(result!.Reading.CurrentHp, settings.OverlayLeft, settings.OverlayTop);
-            if (decision.PlaySound && !MessageBeep(0x30)) Log("Системный звук недоступен.");
-        }
-        Log($"{update.Message}; {decision?.Reason}");
+        Log($"{update.Message}; {update.Decision?.Reason}");
     }
+    private async void TestNotification(object sender, RoutedEventArgs e)
+    {
+        if (closing) return;
+        try
+        {
+            if (worker is not null)
+            {
+                Log("Тест уведомления: останавливаю захват, чтобы он не сбросил ручное предупреждение.");
+                await StopAsync();
+            }
+            if (closing) return;
+            // Deliberately independent of OCR settings, engine state, profile and channel switches.
+            var left = double.Parse(OverlayX.Text.Replace(',', '.'), CultureInfo.InvariantCulture);
+            var top = double.Parse(OverlayY.Text.Replace(',', '.'), CultureInfo.InvariantCulture);
+            notifications.Test(new(left, top, SoundVolume.Value));
+        }
+        catch (Exception error) { Log($"Тест уведомления: {error}"); }
+    }
+    private void NotificationDiagnostic(NotificationEvent entry)
+    {
+        if (!Dispatcher.CheckAccess())
+        {
+            if (!Dispatcher.HasShutdownStarted) Dispatcher.InvokeAsync(() => NotificationDiagnostic(entry));
+            return;
+        }
+        Log($"[{entry.Kind}] {entry.Message}");
+    }
+
     private async void OpenImage(object sender, RoutedEventArgs e)
     {
         if (worker is not null || closing) return;
@@ -176,7 +211,9 @@ public partial class MainWindow : Window
         e.Cancel = true;
         if (closing) return;
         closing = true; IsEnabled = false;
-        await StopAsync(); overlay.Close(); allowClose = true; Close();
+        await StopAsync();
+        try { soundPlayer.Dispose(); }
+        catch (Exception error) { Log($"[SoundError] {error}"); }
+        overlay.Close(); allowClose = true; Close();
     }
-    [DllImport("user32.dll")] [return: MarshalAs(UnmanagedType.Bool)] private static extern bool MessageBeep(uint type);
 }
