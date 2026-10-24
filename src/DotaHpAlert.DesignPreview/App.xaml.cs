@@ -1,0 +1,1 @@
+namespace DotaHpAlert.DesignPreview; public partial class App : System.Windows.Application {}

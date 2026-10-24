@@ -1,0 +1,39 @@
+name: Design Preview Windows x64
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  design-preview:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Publish standalone design preview
+        run: dotnet publish src/DotaHpAlert.DesignPreview -c Release -r win-x64 --self-contained true -p:RestoreLockedMode=false -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:PublishTrimmed=false -o artifacts/design-preview
+      - name: Verify executable and render actual WPF concepts
+        shell: pwsh
+        run: |
+          $exe = Join-Path $PWD 'artifacts/design-preview/SS-Overlay-Design-Preview.exe'
+          if (!(Test-Path $exe)) { throw 'Expected executable is missing' }
+          $output = Join-Path $PWD 'docs/design'
+          $process = Start-Process -FilePath $exe -ArgumentList '--render-concepts', $output -PassThru
+          if (!$process.WaitForExit(60000)) { $process.Kill(); throw 'WPF render timed out' }
+          if ($process.ExitCode -ne 0) { Get-Content artifacts/design-preview/render-error.txt -ErrorAction SilentlyContinue; throw 'WPF render failed' }
+          foreach ($name in @('tactical-dark','fluent-dark','esports-neon')) {
+            $file = Join-Path $output "$name.png"
+            if (!(Test-Path $file) -or (Get-Item $file).Length -lt 10000) { throw "Missing/empty WPF render: $name" }
+          }
+          Remove-Item artifacts/design-preview/*.pdb -ErrorAction SilentlyContinue
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SS-Overlay-Design-Preview
+          path: artifacts/design-preview/
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SS-Overlay-Design-Preview-Screenshots
+          path: docs/design/*.png
+          if-no-files-found: error

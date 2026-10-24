@@ -1,0 +1,299 @@
+<Window x:Class="DotaHpAlert.DesignPreview.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="SS Overlay — Design Preview" Width="1250" Height="860" Background="#0C0E13" Foreground="#F1F3FA">
+<Window.Resources>
+<Style TargetType="TextBlock">
+<Setter Property="Foreground" Value="#F1F3FA"/>
+</Style>
+<Style TargetType="TabItem">
+<Setter Property="Padding" Value="22,12"/>
+<Setter Property="Foreground" Value="#D6DCE8"/>
+<Setter Property="Template">
+<Setter.Value>
+<ControlTemplate TargetType="TabItem">
+<Border x:Name="TabSurface" Background="#202632" BorderBrush="#343E50" BorderThickness="1" CornerRadius="8,8,0,0" Padding="{TemplateBinding Padding}" Margin="0,0,6,0">
+<ContentPresenter ContentSource="Header" HorizontalAlignment="Center"/>
+</Border>
+<ControlTemplate.Triggers>
+<Trigger Property="IsSelected" Value="True"><Setter TargetName="TabSurface" Property="Background" Value="#39445B"/><Setter Property="Foreground" Value="White"/></Trigger>
+<Trigger Property="IsMouseOver" Value="True"><Setter TargetName="TabSurface" Property="BorderBrush" Value="#A5B4D0"/></Trigger>
+</ControlTemplate.Triggers>
+</ControlTemplate>
+</Setter.Value>
+</Setter>
+</Style>
+</Window.Resources>
+<DockPanel Margin="24" Background="#0C0E13">
+<StackPanel DockPanel.Dock="Top" Margin="0,0,0,18">
+<TextBlock Text="DESIGN LAB / SS OVERLAY" FontSize="24" FontWeight="Bold"/>
+<TextBlock Text="Статические референсы • Все показатели вымышлены • Элементы управления декоративные" Foreground="#989FB3" Margin="0,8,0,0"/>
+</StackPanel>
+<TabControl x:Name="ConceptTabs" Background="#0C0E13" BorderThickness="0">
+<TabItem Header="Tactical Dark">
+<ScrollViewer VerticalScrollBarVisibility="Auto">
+<StackPanel Margin="16">
+<TextBlock Text="01 / TACTICAL DARK" Foreground="#FFAA45" FontSize="13" Margin="0,10,0,8"/>
+<TextBlock Text="Utility-first. Графит, точные линии и янтарная тревога." Foreground="#AAB1C1" Margin="0,0,0,22"/>
+<Grid>
+<Grid.ColumnDefinitions>
+<ColumnDefinition Width="3*"/>
+<ColumnDefinition Width="20"/>
+<ColumnDefinition Width="1.3*"/>
+</Grid.ColumnDefinitions>
+<StackPanel>
+<TextBlock Text="MAIN WINDOW / REFERENCE" Foreground="#858FA5" Margin="0,0,0,10"/>
+<Border Background="#111417" CornerRadius="4" BorderBrush="#FFAA45" BorderThickness="1" Padding="26">
+<StackPanel>
+<DockPanel>
+<TextBlock DockPanel.Dock="Right" Text="—   □   ×" Foreground="#7A8495"/>
+<TextBlock Text="SS OVERLAY" FontSize="26" FontWeight="Bold" FontFamily="Consolas"/>
+</DockPanel>
+<TextBlock Text="DOTA HP ALERT  /  Tactical Dark" Foreground="#949DB0" Margin="0,6,0,24"/>
+<Border Background="#1B2025" CornerRadius="4" Padding="16" Margin="0,0,0,16">
+<StackPanel>
+<TextBlock Text="READY / INVOKER" Foreground="#FFAA45" FontFamily="Consolas"/>
+<TextBlock Text="HP 1,240     •     Confidence 98%     •     2 fps" Margin="0,9,0,0" Foreground="#ADB5C6"/>
+</StackPanel>
+</Border>
+<UniformGrid Columns="2">
+<Border Background="#1B2025" CornerRadius="4" Margin="0,0,10,10" Padding="18">
+<StackPanel>
+<TextBlock Text="Alerts" FontSize="18" FontWeight="SemiBold"/>
+<TextBlock Text="Invoker profile" Foreground="#A0AABC" Margin="0,10,0,12"/>
+<TextBlock Text="Threshold   350 HP" Foreground="#FFAA45" FontFamily="Consolas"/>
+</StackPanel>
+</Border>
+<Border Background="#1B2025" CornerRadius="4" Margin="0,0,10,10" Padding="18">
+<StackPanel>
+<TextBlock Text="Overlay" FontSize="18" FontWeight="SemiBold"/>
+<TextBlock Text="Compact notification" Foreground="#A0AABC" Margin="0,10,0,12"/>
+<TextBlock Text="Position   Top center" Foreground="#FFAA45" FontFamily="Consolas"/>
+</StackPanel>
+</Border>
+<Border Background="#1B2025" CornerRadius="4" Margin="0,0,10,10" Padding="18">
+<StackPanel>
+<TextBlock Text="Sound" FontSize="18" FontWeight="SemiBold"/>
+<TextBlock Text="Soft pulse" Foreground="#A0AABC" Margin="0,10,0,12"/>
+<TextBlock Text="Volume   ━━━━━━━─  70%" Foreground="#FFAA45" FontFamily="Consolas"/>
+</StackPanel>
+</Border>
+<Border Background="#1B2025" CornerRadius="4" Margin="0,0,10,10" Padding="18">
+<StackPanel>
+<TextBlock Text="Capture / OCR" FontSize="18" FontWeight="SemiBold"/>
+<TextBlock Text="HUD region · 140 × 25" Foreground="#A0AABC" Margin="0,10,0,12"/>
+<TextBlock Text="Latency   8.4 ms" Foreground="#FFAA45" FontFamily="Consolas"/>
+</StackPanel>
+</Border>
+</UniformGrid>
+<Border Background="#1B2025" CornerRadius="4" Padding="18" Margin="0,8,10,0">
+<StackPanel>
+<TextBlock Text="Preview / Diagnostics" FontSize="18"/>
+<TextBlock Text="01:24:08   Frame sampled     /     98% confidence
+01:24:08   HP above threshold   /   No alert" FontFamily="Consolas" Foreground="#9AA7BB" Margin="0,14,0,0" TextWrapping="Wrap"/>
+</StackPanel>
+</Border>
+<TextBlock Text="STATIC MOCKUP   /   NOT CONNECTED" Foreground="#FFAA45" Margin="0,22,0,0" FontSize="11"/>
+</StackPanel>
+</Border>
+</StackPanel>
+<StackPanel Grid.Column="2">
+<TextBlock Text="IN-GAME / NOTIFICATION" Foreground="#858FA5" Margin="0,0,0,10"/>
+<Border Background="#111B23" CornerRadius="4" Padding="22,70" BorderBrush="#34414F" BorderThickness="1">
+<StackPanel>
+<TextBlock Text="Условный игровой фон" Foreground="#71818C" HorizontalAlignment="Center" Margin="0,0,0,25"/>
+<Border Background="#111417" BorderBrush="#FFAA45" BorderThickness="1,3,1,1" CornerRadius="4" Padding="18">
+<StackPanel HorizontalAlignment="Stretch">
+<TextBlock Text="⚠" Foreground="#FFAA45" FontSize="23" TextAlignment="Center"/>
+<TextBlock Text="SUN STRIKE" Foreground="#FFAA45" FontFamily="Consolas" FontWeight="Bold" FontSize="19" TextAlignment="Center" Margin="0,8,0,8"/>
+<TextBlock Text="150 HP" FontFamily="Consolas" FontSize="44" FontWeight="Bold" TextAlignment="Center"/>
+<TextBlock Text="DANGER ZONE" Foreground="#8F9BAC" FontSize="10" TextAlignment="Center" Margin="0,10,0,0"/>
+</StackPanel>
+</Border>
+<TextBlock Text="Компактное предупреждение
+HP — центральный акцент" TextAlignment="Center" Foreground="#71818C" Margin="0,25,0,0"/>
+</StackPanel>
+</Border>
+</StackPanel>
+</Grid>
+</StackPanel>
+</ScrollViewer>
+</TabItem>
+<TabItem Header="Fluent Dark">
+<ScrollViewer VerticalScrollBarVisibility="Auto">
+<StackPanel Margin="16">
+<TextBlock Text="02 / FLUENT DARK" Foreground="#B7B9FF" FontSize="13" Margin="0,10,0,8"/>
+<TextBlock Text="Спокойный продуктовый интерфейс, мягкие панели и воздух." Foreground="#AAB1C1" Margin="0,0,0,22"/>
+<Grid>
+<Grid.ColumnDefinitions>
+<ColumnDefinition Width="3*"/>
+<ColumnDefinition Width="20"/>
+<ColumnDefinition Width="1.3*"/>
+</Grid.ColumnDefinitions>
+<StackPanel>
+<TextBlock Text="MAIN WINDOW / REFERENCE" Foreground="#858FA5" Margin="0,0,0,10"/>
+<Border Background="#151723" CornerRadius="22" BorderBrush="#B7B9FF" BorderThickness="1" Padding="26">
+<StackPanel>
+<DockPanel>
+<TextBlock DockPanel.Dock="Right" Text="—   □   ×" Foreground="#7A8495"/>
+<TextBlock Text="SS OVERLAY" FontSize="26" FontWeight="Bold" FontFamily="Segoe UI"/>
+</DockPanel>
+<TextBlock Text="DOTA HP ALERT  /  Fluent / Windows 11" Foreground="#949DB0" Margin="0,6,0,24"/>
+<Border Background="#262A3B" CornerRadius="22" Padding="16" Margin="0,0,0,16">
+<StackPanel>
+<TextBlock Text="●  Защита активна" Foreground="#B7B9FF" FontFamily="Segoe UI"/>
+<TextBlock Text="HP 1,240     •     Confidence 98%     •     2 fps" Margin="0,9,0,0" Foreground="#ADB5C6"/>
+</StackPanel>
+</Border>
+<UniformGrid Columns="2">
+<Border Background="#262A3B" CornerRadius="22" Margin="0,0,10,10" Padding="18">
+<StackPanel>
+<TextBlock Text="Alerts" FontSize="18" FontWeight="SemiBold"/>
+<TextBlock Text="Invoker profile" Foreground="#A0AABC" Margin="0,10,0,12"/>
+<TextBlock Text="Threshold   350 HP" Foreground="#B7B9FF" FontFamily="Segoe UI"/>
+</StackPanel>
+</Border>
+<Border Background="#262A3B" CornerRadius="22" Margin="0,0,10,10" Padding="18">
+<StackPanel>
+<TextBlock Text="Overlay" FontSize="18" FontWeight="SemiBold"/>
+<TextBlock Text="Compact notification" Foreground="#A0AABC" Margin="0,10,0,12"/>
+<TextBlock Text="Position   Top center" Foreground="#B7B9FF" FontFamily="Segoe UI"/>
+</StackPanel>
+</Border>
+<Border Background="#262A3B" CornerRadius="22" Margin="0,0,10,10" Padding="18">
+<StackPanel>
+<TextBlock Text="Sound" FontSize="18" FontWeight="SemiBold"/>
+<TextBlock Text="Soft pulse" Foreground="#A0AABC" Margin="0,10,0,12"/>
+<TextBlock Text="Volume   ━━━━━━━─  70%" Foreground="#B7B9FF" FontFamily="Segoe UI"/>
+</StackPanel>
+</Border>
+<Border Background="#262A3B" CornerRadius="22" Margin="0,0,10,10" Padding="18">
+<StackPanel>
+<TextBlock Text="Capture / OCR" FontSize="18" FontWeight="SemiBold"/>
+<TextBlock Text="HUD region · 140 × 25" Foreground="#A0AABC" Margin="0,10,0,12"/>
+<TextBlock Text="Latency   8.4 ms" Foreground="#B7B9FF" FontFamily="Segoe UI"/>
+</StackPanel>
+</Border>
+</UniformGrid>
+<Border Background="#262A3B" CornerRadius="22" Padding="18" Margin="0,8,10,0">
+<StackPanel>
+<TextBlock Text="Preview / Diagnostics" FontSize="18"/>
+<TextBlock Text="01:24:08   Frame sampled     /     98% confidence
+01:24:08   HP above threshold   /   No alert" FontFamily="Consolas" Foreground="#9AA7BB" Margin="0,14,0,0" TextWrapping="Wrap"/>
+</StackPanel>
+</Border>
+<TextBlock Text="STATIC MOCKUP   /   NOT CONNECTED" Foreground="#B7B9FF" Margin="0,22,0,0" FontSize="11"/>
+</StackPanel>
+</Border>
+</StackPanel>
+<StackPanel Grid.Column="2">
+<TextBlock Text="IN-GAME / NOTIFICATION" Foreground="#858FA5" Margin="0,0,0,10"/>
+<Border Background="#111B23" CornerRadius="22" Padding="22,70" BorderBrush="#34414F" BorderThickness="1">
+<StackPanel>
+<TextBlock Text="Условный игровой фон" Foreground="#71818C" HorizontalAlignment="Center" Margin="0,0,0,25"/>
+<Border Background="#151723" BorderBrush="#B7B9FF" BorderThickness="1,3,1,1" CornerRadius="22" Padding="18">
+<StackPanel HorizontalAlignment="Stretch">
+<TextBlock Text="⚠" Foreground="#B7B9FF" FontSize="23" TextAlignment="Center"/>
+<TextBlock Text="Sun Strike" Foreground="#B7B9FF" FontFamily="Segoe UI" FontWeight="Bold" FontSize="19" TextAlignment="Center" Margin="0,8,0,8"/>
+<TextBlock Text="150 HP" FontFamily="Segoe UI" FontSize="44" FontWeight="Bold" TextAlignment="Center"/>
+<TextBlock Text="DANGER ZONE" Foreground="#8F9BAC" FontSize="10" TextAlignment="Center" Margin="0,10,0,0"/>
+</StackPanel>
+</Border>
+<TextBlock Text="Компактное предупреждение
+HP — центральный акцент" TextAlignment="Center" Foreground="#71818C" Margin="0,25,0,0"/>
+</StackPanel>
+</Border>
+</StackPanel>
+</Grid>
+</StackPanel>
+</ScrollViewer>
+</TabItem>
+<TabItem Header="Esports Neon">
+<ScrollViewer VerticalScrollBarVisibility="Auto">
+<StackPanel Margin="16">
+<TextBlock Text="03 / ESPORTS NEON" Foreground="#43F5DA" FontSize="13" Margin="0,10,0,8"/>
+<TextBlock Text="Контрастный HUD, холодный неон и соревновательный ритм." Foreground="#AAB1C1" Margin="0,0,0,22"/>
+<Grid>
+<Grid.ColumnDefinitions>
+<ColumnDefinition Width="3*"/>
+<ColumnDefinition Width="20"/>
+<ColumnDefinition Width="1.3*"/>
+</Grid.ColumnDefinitions>
+<StackPanel>
+<TextBlock Text="MAIN WINDOW / REFERENCE" Foreground="#858FA5" Margin="0,0,0,10"/>
+<Border Background="#090F1C" CornerRadius="2" BorderBrush="#43F5DA" BorderThickness="1" Padding="26">
+<StackPanel>
+<DockPanel>
+<TextBlock DockPanel.Dock="Right" Text="—   □   ×" Foreground="#7A8495"/>
+<TextBlock Text="SS OVERLAY" FontSize="26" FontWeight="Bold" FontFamily="Bahnschrift"/>
+</DockPanel>
+<TextBlock Text="DOTA HP ALERT  /  Esports / Neon" Foreground="#949DB0" Margin="0,6,0,24"/>
+<Border Background="#121E30" CornerRadius="2" Padding="16" Margin="0,0,0,16">
+<StackPanel>
+<TextBlock Text="SYSTEM ONLINE // INVOKER" Foreground="#43F5DA" FontFamily="Bahnschrift"/>
+<TextBlock Text="HP 1,240     •     Confidence 98%     •     2 fps" Margin="0,9,0,0" Foreground="#ADB5C6"/>
+</StackPanel>
+</Border>
+<UniformGrid Columns="2">
+<Border Background="#121E30" CornerRadius="2" Margin="0,0,10,10" Padding="18">
+<StackPanel>
+<TextBlock Text="Alerts" FontSize="18" FontWeight="SemiBold"/>
+<TextBlock Text="Invoker profile" Foreground="#A0AABC" Margin="0,10,0,12"/>
+<TextBlock Text="Threshold   350 HP" Foreground="#43F5DA" FontFamily="Bahnschrift"/>
+</StackPanel>
+</Border>
+<Border Background="#121E30" CornerRadius="2" Margin="0,0,10,10" Padding="18">
+<StackPanel>
+<TextBlock Text="Overlay" FontSize="18" FontWeight="SemiBold"/>
+<TextBlock Text="Compact notification" Foreground="#A0AABC" Margin="0,10,0,12"/>
+<TextBlock Text="Position   Top center" Foreground="#43F5DA" FontFamily="Bahnschrift"/>
+</StackPanel>
+</Border>
+<Border Background="#121E30" CornerRadius="2" Margin="0,0,10,10" Padding="18">
+<StackPanel>
+<TextBlock Text="Sound" FontSize="18" FontWeight="SemiBold"/>
+<TextBlock Text="Soft pulse" Foreground="#A0AABC" Margin="0,10,0,12"/>
+<TextBlock Text="Volume   ━━━━━━━─  70%" Foreground="#43F5DA" FontFamily="Bahnschrift"/>
+</StackPanel>
+</Border>
+<Border Background="#121E30" CornerRadius="2" Margin="0,0,10,10" Padding="18">
+<StackPanel>
+<TextBlock Text="Capture / OCR" FontSize="18" FontWeight="SemiBold"/>
+<TextBlock Text="HUD region · 140 × 25" Foreground="#A0AABC" Margin="0,10,0,12"/>
+<TextBlock Text="Latency   8.4 ms" Foreground="#43F5DA" FontFamily="Bahnschrift"/>
+</StackPanel>
+</Border>
+</UniformGrid>
+<Border Background="#121E30" CornerRadius="2" Padding="18" Margin="0,8,10,0">
+<StackPanel>
+<TextBlock Text="Preview / Diagnostics" FontSize="18"/>
+<TextBlock Text="01:24:08   Frame sampled     /     98% confidence
+01:24:08   HP above threshold   /   No alert" FontFamily="Consolas" Foreground="#9AA7BB" Margin="0,14,0,0" TextWrapping="Wrap"/>
+</StackPanel>
+</Border>
+<TextBlock Text="STATIC MOCKUP   /   NOT CONNECTED" Foreground="#43F5DA" Margin="0,22,0,0" FontSize="11"/>
+</StackPanel>
+</Border>
+</StackPanel>
+<StackPanel Grid.Column="2">
+<TextBlock Text="IN-GAME / NOTIFICATION" Foreground="#858FA5" Margin="0,0,0,10"/>
+<Border Background="#111B23" CornerRadius="2" Padding="22,70" BorderBrush="#34414F" BorderThickness="1">
+<StackPanel>
+<TextBlock Text="Условный игровой фон" Foreground="#71818C" HorizontalAlignment="Center" Margin="0,0,0,25"/>
+<Border Background="#090F1C" BorderBrush="#43F5DA" BorderThickness="1,3,1,1" CornerRadius="2" Padding="18">
+<StackPanel HorizontalAlignment="Stretch">
+<TextBlock Text="⚠" Foreground="#43F5DA" FontSize="23" TextAlignment="Center"/>
+<TextBlock Text="SUN STRIKE" Foreground="#43F5DA" FontFamily="Bahnschrift" FontWeight="Bold" FontSize="19" TextAlignment="Center" Margin="0,8,0,8"/>
+<TextBlock Text="150 HP" FontFamily="Bahnschrift" FontSize="44" FontWeight="Bold" TextAlignment="Center"/>
+<TextBlock Text="DANGER ZONE" Foreground="#8F9BAC" FontSize="10" TextAlignment="Center" Margin="0,10,0,0"/>
+</StackPanel>
+</Border>
+<TextBlock Text="Компактное предупреждение
+HP — центральный акцент" TextAlignment="Center" Foreground="#71818C" Margin="0,25,0,0"/>
+</StackPanel>
+</Border>
+</StackPanel>
+</Grid>
+</StackPanel>
+</ScrollViewer>
+</TabItem>
+</TabControl>
+</DockPanel>
+</Window>
