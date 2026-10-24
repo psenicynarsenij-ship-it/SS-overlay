@@ -54,6 +54,13 @@ jobs:
           name: SS-Overlay-Fluent-Dark-Screenshots
           path: artifacts/fluent-screenshots/*.png
           if-no-files-found: error
+      - name: Upload sound library screenshot
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: SS-Overlay-Sound-Library-Screenshot
+          path: artifacts/fluent-screenshots/fluent-100-tab-3.png
+          if-no-files-found: error
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
